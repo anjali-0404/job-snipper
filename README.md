@@ -31,15 +31,25 @@ ResumeMasterAI is a comprehensive, multi-page Streamlit application that leverag
 - Skills gap analysis
 - Keyword optimization suggestions
 
-### ✍️ AI Resume Rewriting
+### ✍️ Ultimate AI Resume Rewriting
 
-- Intelligent resume optimization
-- ATS score tracking with color-coded badges
-- Custom instruction support
-- **5 Export Formats**: TXT, Markdown, DOCX, PDF, Copy to Clipboard
+- **Comprehensive Resume Optimization** with AI-powered rewriting
+- **Multi-Feature Toolkit**:
+  - ATS Scanner with real-time scoring and optimization tips
+  - Version Management for tracking multiple resume iterations
+  - Skills Analyzer with gap analysis and recommendations
+  - Interview Preparation with AI-generated questions
+  - Salary Estimator based on skills and location
+  - Social Resume Generator for LinkedIn optimization
+  - Email Generator for professional outreach
+- **Advanced Analytics**:
+  - Resume grading with detailed feedback
+  - Job matching and compatibility scoring
+  - Industry-specific optimization
+- **Export Options**: Multiple format support (TXT, Markdown, DOCX, PDF)
+- **Custom Instructions**: Tailor rewrites to specific job requirements
 
 ### 💼 Cover Letter & Project Generation
-
 - AI-powered cover letter generation
 - Customizable tone and skill highlighting
 - Project suggestion based on skills
@@ -62,6 +72,14 @@ ResumeMasterAI is a comprehensive, multi-page Streamlit application that leverag
 - Edit ✏️ and Preview 👁️ modes
 - Export to multiple formats
 
+## 📝 Recent Updates
+
+### Version Consolidation
+
+- **Unified Resume Rewrite Page**: Consolidated three separate resume rewrite modules into a single, comprehensive **Ultimate Resume Rewrite** page
+- All previous features from basic, enhanced, and ultimate versions are now integrated into one powerful interface
+- Streamlined user experience with all career optimization tools in one place
+
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -73,35 +91,31 @@ ResumeMasterAI is a comprehensive, multi-page Streamlit application that leverag
 ### Installation
 
 1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd "job-sniper"
+   ```
 
-```bash
-git clone <repository-url>
-cd "job snipper"
-```
+2. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-1.1 **Install dependencies**
+3. **Configure API keys**
+   ```bash
+   # Copy the example secrets file
+   cp .streamlit/secrets.toml.example .streamlit/secrets.toml
 
-```bash
-pip install -r requirements.txt
-```
+   # Edit secrets.toml and add your API keys
+   # Use your preferred editor, e.g., nano, vim, or code
+   nano .streamlit/secrets.toml
+   ```
 
-1.2 **Configure API keys**
-
-```bash
-# Copy the example secrets file
-copy .streamlit\secrets.toml.example .streamlit\secrets.toml
-
-# Edit secrets.toml and add your API keys
-notepad .streamlit\secrets.toml
-```
-
-1.3 **Run the application**
-
-```bash
-streamlit run Home.py
-```
-
-The application will open in your default browser at `http://localhost:8501`
+5. **Run the application**
+   ```bash
+   streamlit run Home.py
+   ```
+   The application will open in your default browser at `http://localhost:8501`.
 
 ## 📦 Dependencies
 
@@ -118,7 +132,7 @@ Key dependencies include:
 - `seaborn>=0.12.0` - Statistical visualizations
 - `pandas>=2.0.0` - Data manipulation
 
-See `requirements.txt` for complete list.
+See `requirements.txt` for the complete list.
 
 ## 🎨 Design System
 
@@ -141,14 +155,22 @@ ResumeMasterAI features a modern, unified design system:
 
 ## 📱 Page Structure
 
-1. **Home (🚀)** - Landing page with feature overview
-2. **Upload Resume (📄)** - Parse and upload resumes
-3. **Analysis & Scoring (📊)** - ATS scoring and analytics
-4. **Job Matching (🎯)** - Match resumes to job descriptions
-5. **Resume Rewrite (✍️)** - AI-powered optimization
-6. **Cover Letter & Projects (💼)** - Generate cover letters and project ideas
-7. **Job Search (🔍)** - Search for jobs
-8. **Resume Builder (🏗️)** - Build professional resumes from scratch
+1. **Home (🚀)** - Landing page with feature overview and quick navigation
+2. **Upload Resume (📄)** - Parse and upload resumes with OCR support
+3. **Analysis & Scoring (📊)** - Comprehensive ATS scoring and analytics
+4. **Job Matching (🎯)** - Smart matching of resumes to job descriptions
+5. **Ultimate Resume Rewrite (✍️)** - AI-powered optimization with advanced career tools
+   - ATS Scanner & Optimizer
+   - Version Management System
+   - Skills Analysis & Gap Identification
+   - Interview Prep Generator
+   - Salary Estimator
+   - Social Resume Generator
+   - Professional Email Templates
+   - Resume Grading & Feedback
+6. **Cover Letter & Projects (💼)** - AI-generated cover letters and project suggestions
+7. **Job Search (🔍)** - Real-time job board integration
+8. **Resume Builder (🏗️)** - Build professional resumes from scratch with templates
 
 ## 🔧 Configuration
 

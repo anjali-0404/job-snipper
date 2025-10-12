@@ -80,10 +80,14 @@ def rewrite_resume(resume_json: dict, instruction: str = None) -> dict:
       - Reads `raw_text` from the input dict
       - Produces `rewritten_text` on the returned dict
       - On failure, copies `raw_text` to `rewritten_text` and logs the error
+      - Detects if AI returned the same content and marks it with metadata
 
     Args:
       - resume_json: Dictionary containing resume data with 'raw_text' key
       - instruction: Optional custom instruction for rewriting style/focus
+
+    Returns:
+      - Dictionary with 'rewritten_text' and metadata about changes
     """
     try:
         raw_text = resume_json.get("raw_text", "")
@@ -93,14 +97,18 @@ def rewrite_resume(resume_json: dict, instruction: str = None) -> dict:
             prompt = (
                 f"{instruction}\n\n"
                 "Rewrite the following resume text to have impactful bullet points\n"
-                "with measurable metrics wherever possible. Keep each bullet concise and action-oriented.\n\n"
+                "with measurable metrics wherever possible. Keep each bullet concise and action-oriented.\n"
+                "If the resume is already well-written and optimized, you can make minor refinements "
+                "or return it as-is if no improvements are needed.\n\n"
                 f"Resume text:\n{raw_text}\n\n"
                 "Output only the rewritten resume bullets."
             )
         else:
             prompt = (
                 "Rewrite the following resume text to have impactful bullet points\n"
-                "with measurable metrics wherever possible. Keep each bullet concise and action-oriented.\n\n"
+                "with measurable metrics wherever possible. Keep each bullet concise and action-oriented.\n"
+                "If the resume is already well-written and optimized, you can make minor refinements "
+                "or return it as-is if no improvements are needed.\n\n"
                 f"Resume text:\n{raw_text}\n\n"
                 "Output only the rewritten resume bullets."
             )
@@ -108,14 +116,45 @@ def rewrite_resume(resume_json: dict, instruction: str = None) -> dict:
         if _HAS_GEMINI:
             # Use Gemini to generate text
             rewritten_text = _call_gemini(prompt, model=None, temperature=0.3)
+
+            # Check if AI returned essentially the same content
+            raw_clean = raw_text.strip().lower().replace(" ", "").replace("\n", "")
+            rewritten_clean = (
+                rewritten_text.strip().lower().replace(" ", "").replace("\n", "")
+            )
+
+            if raw_clean == rewritten_clean:
+                print("✓ Resume was already optimized - AI returned same content")
+                resume_json["no_changes_needed"] = True
+                resume_json["change_reason"] = "Resume is already well-optimized"
+            else:
+                # Calculate similarity
+                from difflib import SequenceMatcher
+
+                similarity = SequenceMatcher(None, raw_clean, rewritten_clean).ratio()
+                resume_json["no_changes_needed"] = False
+                resume_json["similarity_percentage"] = round(similarity * 100, 1)
+
+                if similarity > 0.9:
+                    print(f"✓ Minor refinements made ({similarity * 100:.1f}% similar)")
+                else:
+                    print(
+                        f"✓ Significant improvements made ({(1 - similarity) * 100:.1f}% different)"
+                    )
         else:
             # Graceful fallback: return the original text unchanged
-            print("Gemini not available; returning original text as rewritten_text")
+            print("⚠ Gemini not available; returning original text as rewritten_text")
             rewritten_text = raw_text
+            resume_json["no_changes_needed"] = True
+            resume_json["change_reason"] = (
+                "AI service unavailable - fallback to original"
+            )
 
         resume_json["rewritten_text"] = rewritten_text
         return resume_json
     except Exception as e:
-        print(f"Resume rewriting failed: {e}")
+        print(f"❌ Resume rewriting failed: {e}")
         resume_json["rewritten_text"] = resume_json.get("raw_text", "")
+        resume_json["no_changes_needed"] = True
+        resume_json["change_reason"] = f"Error occurred: {str(e)}"
         return resume_json
