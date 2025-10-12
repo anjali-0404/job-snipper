@@ -69,14 +69,14 @@ if "parsed_resume" not in st.session_state:
 # Sidebar Configuration
 with st.sidebar:
     st.header("⚙️ Configuration")
-    
+
     # Resume Upload
     uploaded_file = st.file_uploader(
         "Upload Resume (Optional)",
-        type=['pdf', 'docx', 'txt'],
-        help="Upload your resume to extract skills and experience"
+        type=["pdf", "docx", "txt"],
+        help="Upload your resume to extract skills and experience",
     )
-    
+
     if uploaded_file and not st.session_state.parsed_resume:
         with st.spinner("📄 Parsing resume..."):
             try:
