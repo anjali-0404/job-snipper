@@ -200,4 +200,4 @@ docker run -p 8501:8501 resumemasterai
 
 ## Built with ❤️ by the ResumeMasterAI Team
 
-## Empowering job seekers with AI-driven career tools*
+## Empowering job seekers with AI-driven career tools
