@@ -1,0 +1,26 @@
+{
+  "parser": {
+    "parsed_keys": [
+      "name",
+      "skills"
+    ]
+  },
+  "scoring": {
+    "overall": 80
+  },
+  "matcher": {
+    "match_score": 85
+  },
+  "rewrite": {
+    "has_rewritten": true
+  },
+  "coverletter": {
+    "has_cover": true
+  },
+  "projectsuggester": {
+    "count": 3
+  },
+  "jobsearch": {
+    "count": 10
+  }
+}

@@ -1,0 +1,22 @@
+// AI Resume Assistant Workflow
+digraph {
+	Parser [label="Parser
+{'parsed_keys': ['skills', 'education', 'experience', 'raw_text']}"]
+	Scoring [label="Scoring
+{'overall': 59.25, 'subscores': {'structure': 75.0, 'skills': 55.0, 'content': 50.0}}"]
+	Matcher [label=Matcher]
+	Rewrite [label="Rewrite
+{'has_rewritten': False}"]
+	CoverLetter [label="CoverLetter
+{'has_cover': False}"]
+	ProjectSuggester [label="ProjectSuggester
+{'count': 0}"]
+	JobSearch [label="JobSearch
+{'count': 0}"]
+	Parser -> Scoring
+	Scoring -> Matcher
+	Matcher -> Rewrite
+	Rewrite -> CoverLetter
+	Rewrite -> ProjectSuggester
+	Rewrite -> JobSearch
+}

@@ -1,0 +1,34 @@
+streamlit
+# Pin core LLM and SDK versions to resolve dependency conflicts reported during install
+langchain>=0.3.27
+google-ai-generativelanguage>=0.7,<1
+requests
+pdfplumber
+python-docx
+docx2txt
+groq>=0.31.0        # Groq API client wrapper
+langchain-exa
+# vector DB client, e.g. chromadb, pinecone, etc.
+chromadb
+# for diff / UI charts and visualizations
+plotly
+deepdiff
+matplotlib>=3.7.0
+seaborn>=0.12.0
+pandas>=2.0.0
+reportlab>=3.6.0
+
+# Ensure dotenv version meets other packages' minimum
+python-dotenv>=1.1.1
+
+# Optional OCR backends
+pillow
+pytesseract
+google-cloud-vision
+
+# Match opentelemetry requirements (picked to satisfy OTLP exporter)
+opentelemetry-api==1.37.0
+opentelemetry-exporter-otlp-proto-common==1.37.0
+opentelemetry-proto==1.37.0
+opentelemetry-sdk==1.37.0
+opentelemetry-semantic-conventions==0.58b0

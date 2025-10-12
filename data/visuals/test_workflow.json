@@ -1,0 +1,35 @@
+{
+  "parser": {
+    "parsed_keys": [
+      "name",
+      "email",
+      "skills"
+    ]
+  },
+  "scoring": {
+    "overall": 75,
+    "subscores": {
+      "skills": 80,
+      "experience": 70
+    }
+  },
+  "matcher": {
+    "match_score": 85,
+    "matched_skills": [
+      "Python",
+      "JavaScript"
+    ]
+  },
+  "rewrite": {
+    "has_rewritten": true
+  },
+  "coverletter": {
+    "has_cover": true
+  },
+  "projectsuggester": {
+    "count": 3
+  },
+  "jobsearch": {
+    "count": 10
+  }
+}
