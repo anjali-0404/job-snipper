@@ -6,6 +6,7 @@ Complete AI-powered resume optimization and career management platform.
 import streamlit as st
 import os
 import sys
+import urllib.parse
 
 # Add parent directory to path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -31,7 +32,8 @@ if "loaded" not in st.session_state:
     st.session_state.loaded = True
 
 # Hero Section
-st.markdown("""
+start_page = "/?page=" + urllib.parse.quote("pages/1_📄_Upload_Resume.py")
+st.markdown(f"""
 <div class="hero-section">
     <div style="position: relative; z-index: 2;">
         <div class="ai-badge">
@@ -47,7 +49,7 @@ st.markdown("""
             Leverage cutting-edge AI to create, optimize, and manage your professional documents with unprecedented precision
         </p>
         <div style="margin-top: 2rem;">
-            <a href="/1_%F0%9F%93%84_Upload_Resume" target="_self" style="text-decoration: none;">
+            <a href="{start_page}" target="_self" style="text-decoration: none;">
                 <button style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; padding: 1rem 3rem; font-size: 1.2rem; font-weight: 700; border-radius: 50px; cursor: pointer; box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4); transition: all 0.3s ease; margin-right: 1rem;">
                     🚀 Get Started Free
                 </button>
@@ -71,20 +73,22 @@ st.markdown("""
 
 # Navigation Grid
 nav_items = [
-    ("📄", "Upload Resume", "Upload and parse your resume", "/1_%F0%9F%93%84_Upload_Resume"),
-    ("📊", "Analysis & Scoring", "Get detailed ATS analysis", "/2_%F0%9F%93%8A_Analysis_Scoring"),
-    ("🎯", "Job Matching", "Find perfect job matches", "/3_%F0%9F%8E%AF_Job_Matching"),
-    ("✍️", "Resume Rewrite", "AI-powered optimization", "/4_%E2%9C%8D%EF%B8%8F_Resume_Rewrite_Ultimate"),
-    ("💼", "Cover Letters", "Generate custom letters", "/5_%F0%9F%92%BC_Cover_Letter_Projects"),
-    ("🔍", "Job Search", "Search opportunities", "/6_%F0%9F%94%8D_Job_Search"),
-    ("🏗️", "Resume Builder", "Build from scratch", "/7_%F0%9F%8F%97%EF%B8%8F_Resume_Builder"),
+    ("📄", "Upload Resume", "Upload and parse your resume", "pages/1_📄_Upload_Resume.py"),
+    ("📊", "Analysis & Scoring", "Get detailed ATS analysis", "pages/2_📊_Analysis_Scoring.py"),
+    ("🎯", "Job Matching", "Find perfect job matches", "pages/3_🎯_Job_Matching.py"),
+    ("✍️", "Resume Rewrite", "AI-powered optimization", "pages/4_✍️_Resume_Rewrite_Ultimate.py"),
+    ("💼", "Cover Letters", "Generate custom letters", "pages/5_💼_Cover_Letter_Projects.py"),
+    ("🔍", "Job Search", "Search opportunities", "pages/6_🔍_Job_Search.py"),
+    ("🏗️", "Resume Builder", "Build from scratch", "pages/7_🏗️_Resume_Builder.py"),
 ]
 
 cols = st.columns(len(nav_items))
-for i, (icon, title, desc, link) in enumerate(nav_items):
+for i, (icon, title, desc, page_file) in enumerate(nav_items):
     with cols[i]:
+        # Build a Streamlit multipage query param link (URL-encoded)
+        href = "/?page=" + urllib.parse.quote(page_file)
         st.markdown(f"""
-        <a href="{link}" target="_self" style="text-decoration: none;">
+        <a href="{href}" target="_self" style="text-decoration: none;">
             <div class="nav-card">
                 <div class="nav-card-icon">{icon}</div>
                 <div class="nav-card-title">{title}</div>
@@ -297,7 +301,7 @@ st.markdown("""
         <p style="font-size: 1.3rem; color: rgba(255, 255, 255, 0.9); margin-bottom: 2rem;">
             Join 50,000+ professionals who've accelerated their careers with ResumeMasterAI
         </p>
-        <a href="/1_%F0%9F%93%84_Upload_Resume" target="_self" style="text-decoration: none;">
+        <a href="{start_page}" target="_self" style="text-decoration: none;">
             <button style="background: linear-gradient(135deg, #fbbf24, #f97316); color: white; border: none; padding: 1.2rem 3.5rem; font-size: 1.3rem; font-weight: 800; border-radius: 50px; cursor: pointer; box-shadow: 0 15px 40px rgba(251, 191, 36, 0.4); transition: all 0.3s ease; animation: pulse 2s infinite;">
                 ✨ Start Your Journey - It's FREE
             </button>
