@@ -96,7 +96,7 @@ nav_items = [
         "✍️",
         "Resume Rewrite",
         "AI-powered optimization",
-        "pages/4_✍️_Resume_Rewrite_Ultimate.py",
+        "pages/4_✍️_Resume_Rewrite.py",
     ),
     (
         "💼",
@@ -455,7 +455,7 @@ with st.sidebar:
     )
     st.page_link("pages/3_🎯_Job_Matching.py", label="🎯 Job Matching", icon="🎯")
     st.page_link(
-        "pages/4_✍️_Resume_Rewrite_Ultimate.py", label="✍️ Resume Rewrite", icon="✍️"
+        "pages/4_✍️_Resume_Rewrite.py", label="✍️ Resume Rewrite", icon="✍️"
     )
 
     st.markdown("---")
