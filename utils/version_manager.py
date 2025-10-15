@@ -40,6 +40,8 @@ class VersionManager:
             "settings": settings,
             "notes": notes,
             "created_at": datetime.now().isoformat(),
+            "is_current": False,
+            "is_archived": False,
             "stats": {
                 "word_count": len(resume_text.split()),
                 "char_count": len(resume_text),
@@ -121,6 +123,33 @@ class VersionManager:
     def list_versions(self) -> List[Dict[str, Any]]:
         """List all versions."""
         return self.versions
+
+    def get_all_versions(
+        self, sort_by: str = "Most Recent", include_archived: bool = True
+    ) -> List[Dict[str, Any]]:
+        """
+        Get all versions with sorting and filtering options.
+
+        Args:
+            sort_by: Sorting method ('Most Recent', 'Oldest First', 'Name (A-Z)', 'Name (Z-A)')
+            include_archived: Whether to include archived versions
+
+        Returns:
+            List of version dictionaries
+        """
+        versions = self.versions.copy()
+
+        # Apply sorting
+        if sort_by == "Most Recent":
+            versions.sort(key=lambda v: v["created_at"], reverse=True)
+        elif sort_by == "Oldest First":
+            versions.sort(key=lambda v: v["created_at"])
+        elif sort_by == "Name (A-Z)":
+            versions.sort(key=lambda v: v["name"].lower())
+        elif sort_by == "Name (Z-A)":
+            versions.sort(key=lambda v: v["name"].lower(), reverse=True)
+
+        return versions
 
     def compare_versions(self, version_id1: int, version_id2: int) -> Dict[str, Any]:
         """
@@ -307,6 +336,65 @@ class VersionManager:
         """Delete a specific version."""
         self.versions = [v for v in self.versions if v["id"] != version_id]
         return True
+
+    def get_version_name(self, version_id: int) -> str:
+        """Get the name of a version by ID."""
+        version = self.get_version(version_id)
+        return version["name"] if version else f"Version {version_id}"
+
+    def get_version_file(self, version_id: int) -> Optional[Dict[str, Any]]:
+        """Get version file data for download."""
+        version = self.get_version(version_id)
+        if version:
+            return {
+                "filename": f"{version['name'].replace(' ', '_')}.txt",
+                "content": version["content"],
+                "metadata": {
+                    "created_at": version["created_at"],
+                    "settings": version["settings"],
+                    "stats": version["stats"],
+                    "scores": version["scores"],
+                },
+            }
+        return None
+
+    def set_current_version(self, version_id: int) -> bool:
+        """Set a version as the current active version."""
+        version = self.get_version(version_id)
+        if version:
+            # Mark all as not current
+            for v in self.versions:
+                v["is_current"] = False
+            # Set this one as current
+            version["is_current"] = True
+            return True
+        return False
+
+    def save_version(
+        self,
+        content: str,
+        name: str,
+        notes: str = "",
+        settings: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Any]:
+        """
+        Save a new resume version.
+
+        Args:
+            content: Resume content
+            name: Version name
+            notes: Optional notes
+            settings: Version settings
+
+        Returns:
+            Created version data
+        """
+        if settings is None:
+            settings = {}
+
+        return self.create_version(
+            resume_text=content, version_name=name, settings=settings, notes=notes
+        )
 
     def get_recommendations(self) -> List[str]:
         """Get recommendations based on version performance."""

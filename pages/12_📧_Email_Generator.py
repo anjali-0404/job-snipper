@@ -159,7 +159,9 @@ with tab1:
         # Recipient Info
         st.markdown("#### Recipient Information")
         recipient_name = st.text_input("Recipient's Name", placeholder="Jane Smith")
-        recipient_email = st.text_input("Recipient's Email", placeholder="jane.smith@techcorp.com")
+        recipient_email = st.text_input(
+            "Recipient's Email", placeholder="jane.smith@techcorp.com"
+        )
         recipient_title = st.text_input(
             "Recipient's Title", placeholder="Hiring Manager"
         )
@@ -383,8 +385,19 @@ with tab1:
 
         with col3:
             if st.button("📧 Open in Email Client"):
-                mailto_link = f"mailto:{recipient_email if 'recipient_email' in locals() else ''}?subject={result.get('subject', '')}&body={result.get('body', '')}"
-                st.markdown(f"[Open Email Client]({mailto_link})")
+                # Use the recipient email from the input or leave empty
+                email_to = recipient_email if recipient_email else ""
+                subject_encoded = result.get("subject", "").replace(" ", "%20")
+                body_encoded = (
+                    result.get("body", "").replace("\n", "%0D%0A").replace(" ", "%20")
+                )
+                mailto_link = (
+                    f"mailto:{email_to}?subject={subject_encoded}&body={body_encoded}"
+                )
+                st.markdown(
+                    f'<a href="{mailto_link}" target="_blank" style="display: inline-block; padding: 0.5rem 1rem; background: linear-gradient(135deg, #667eea, #764ba2); color: white; text-decoration: none; border-radius: 8px; font-weight: 600;">Open Email Client</a>',
+                    unsafe_allow_html=True,
+                )
 
         with col4:
             if st.button("🔄 Generate Another"):

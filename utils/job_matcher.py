@@ -403,7 +403,7 @@ class JobMatcher:
                     "priority": "High",
                     "category": "Technical Skills",
                     "suggestion": f"Highlight these technical skills: {', '.join(tech_missing)}",
-                    "action": f"Add a 'Technical Skills' section or mention in experience",
+                    "action": "Add a 'Technical Skills' section or mention in experience",
                     "impact": "Matches job technical requirements",
                 }
             )

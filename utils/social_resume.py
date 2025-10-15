@@ -42,9 +42,9 @@ Throughout my career, I've focused on delivering measurable results:
         if passion:
             about += f"\n\n{passion}"
 
-        about += f"\n\nI'm passionate about leveraging technology to solve real-world problems and driving innovation in everything I do."
+        about += "\n\nI'm passionate about leveraging technology to solve real-world problems and driving innovation in everything I do."
 
-        about += f"\n\n💼 Open to: New opportunities, collaborations, and networking\n📫 Let's connect!"
+        about += "\n\n💼 Open to: New opportunities, collaborations, and networking\n📫 Let's connect!"
 
         return about
 

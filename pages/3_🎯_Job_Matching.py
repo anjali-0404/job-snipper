@@ -11,7 +11,6 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from utils.color_scheme import get_unified_css
-from utils.ui_components import apply_custom_css, create_score_badge
 from utils.workflow_visual import create_skill_match_visualization
 from agents.matcher_agent import match_resume
 from dotenv import load_dotenv
@@ -26,8 +25,19 @@ st.set_page_config(
 # Apply unified color scheme
 st.markdown(get_unified_css(), unsafe_allow_html=True)
 
-# Apply custom styling
-apply_custom_css()
+
+# Helper function for score badge
+def create_score_badge(score):
+    """Create a styled score badge."""
+    color = "#22c55e" if score >= 80 else "#f59e0b" if score >= 60 else "#ef4444"
+    return f"""
+    <div style="display: inline-block; padding: 1rem 2rem; background: linear-gradient(135deg, {color}, {color}dd); 
+         border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+        <span style="font-size: 3rem; font-weight: 700; color: white;">{score}</span>
+        <span style="font-size: 1.5rem; color: white; opacity: 0.9;">/100</span>
+    </div>
+    """
+
 
 # Initialize session state
 if "parsed" not in st.session_state:

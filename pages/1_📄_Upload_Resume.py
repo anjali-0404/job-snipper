@@ -11,7 +11,6 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from utils.color_scheme import get_unified_css
-from utils.ui_components import apply_custom_css, create_hero_section
 from utils.file_utils import save_uploaded_file, detect_file_type
 from agents.parser_agent import parse_resume
 from dotenv import load_dotenv
@@ -26,9 +25,6 @@ st.set_page_config(
 # Apply unified color scheme
 st.markdown(get_unified_css(), unsafe_allow_html=True)
 
-# Apply custom styling
-apply_custom_css()
-
 # Initialize session state
 if "parsed" not in st.session_state:
     st.session_state.parsed = None
@@ -37,12 +33,25 @@ if "file_path" not in st.session_state:
 if "file_type" not in st.session_state:
     st.session_state.file_type = None
 
-# Header
-st.markdown("# 📄 Upload & Parse Your Resume")
+# Header with improved styling
 st.markdown(
     """
-<div class="custom-card">
-    <p style="font-size: 1.1rem; color: #4F5D75;">
+<div style="text-align: center; margin-bottom: 2rem;">
+    <h1 style="color: white; font-size: 3rem; font-weight: 900; margin-bottom: 0.5rem;">
+        📄 Upload & Parse Your Resume
+    </h1>
+    <p style="color: rgba(255, 255, 255, 0.8); font-size: 1.2rem; margin-bottom: 1rem;">
+        Powered by Advanced AI Technology
+    </p>
+</div>
+""",
+    unsafe_allow_html=True,
+)
+
+st.markdown(
+    """
+<div class="unified-card" style="margin-bottom: 2rem;">
+    <p style="font-size: 1.1rem; color: #4F5D75; text-align: center;">
         Upload your resume in PDF or DOCX format. Our advanced AI will extract and structure 
         all relevant information including skills, experience, education, and more.
     </p>
@@ -55,12 +64,20 @@ st.markdown(
 col1, col2 = st.columns([1, 1])
 
 with col1:
-    st.markdown("### 📤 Upload Your Resume")
+    st.markdown(
+        """
+    <div class="gradient-header" style="font-size: 1.8rem; margin-bottom: 1.5rem; text-align: center;">
+        📤 Upload Your Resume
+    </div>
+    """,
+        unsafe_allow_html=True,
+    )
 
     uploaded_file = st.file_uploader(
         "Choose your resume file",
         type=["pdf", "docx"],
         help="Supported formats: PDF, DOCX. Maximum file size: 10MB",
+        key="resume_uploader",
     )
 
     if uploaded_file:
@@ -98,7 +115,14 @@ with col1:
         """)
 
 with col2:
-    st.markdown("### 📊 Parsed Data")
+    st.markdown(
+        """
+    <div class="gradient-header" style="font-size: 1.8rem; margin-bottom: 1.5rem; text-align: center;">
+        📊 Parsed Data
+    </div>
+    """,
+        unsafe_allow_html=True,
+    )
 
     if st.session_state.parsed:
         # Display parsed information in organized sections
@@ -210,19 +234,39 @@ with col2:
             st.switch_page("pages/2_📊_Analysis_Scoring.py")
 
     else:
-        st.info("👆 Upload and parse a resume to see the extracted data here.")
+        st.markdown(
+            """
+        <div class="glass-card" style="text-align: center; padding: 3rem 2rem;">
+            <div style="font-size: 4rem; margin-bottom: 1rem; animation: pulse 2s infinite;">👈</div>
+            <h3 style="color: white; font-size: 1.5rem; margin-bottom: 1rem;">Upload a Resume to Begin</h3>
+            <p style="color: rgba(255, 255, 255, 0.7); font-size: 1rem;">
+                Your parsed data will appear here
+            </p>
+        </div>
+        """,
+            unsafe_allow_html=True,
+        )
 
-        # Sample data preview
-        st.markdown("### 📋 Sample Output")
-        st.markdown("""
-        Once parsed, you'll see:
-        - ✅ Personal information (name, contact details)
-        - ✅ Skills (technical, soft skills, languages)
-        - ✅ Work experience with dates and descriptions
-        - ✅ Education history
-        - ✅ Certifications and achievements
-        - ✅ Raw text extraction for reference
-        """)
+        # Sample data preview with better styling
+        st.markdown('<div style="margin-top: 2rem;"></div>', unsafe_allow_html=True)
+        st.markdown(
+            """
+        <div class="unified-card">
+            <h3 style="color: #667eea; font-size: 1.3rem; margin-bottom: 1rem; font-weight: 700;">
+                📋 What You'll See After Parsing
+            </h3>
+            <ul style="color: #555; font-size: 1rem; line-height: 2;">
+                <li>✅ <strong>Personal Information</strong> - Name, email, phone, location</li>
+                <li>✅ <strong>Skills</strong> - Technical, soft skills, languages</li>
+                <li>✅ <strong>Work Experience</strong> - Positions, companies, dates, descriptions</li>
+                <li>✅ <strong>Education</strong> - Degrees, institutions, graduation dates</li>
+                <li>✅ <strong>Certifications</strong> - Professional credentials and achievements</li>
+                <li>✅ <strong>Raw Text</strong> - Complete extracted content for reference</li>
+            </ul>
+        </div>
+        """,
+            unsafe_allow_html=True,
+        )
 
 # Progress indicator at bottom
 st.markdown("---")

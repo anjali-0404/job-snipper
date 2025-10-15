@@ -13,7 +13,6 @@ from datetime import datetime
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from utils.color_scheme import get_unified_css
-from utils.ui_components import apply_custom_css
 from agents.coverletter_agent import generate_cover_letter
 from agents.project_agent import suggest_projects
 from dotenv import load_dotenv
@@ -27,9 +26,6 @@ st.set_page_config(
 
 # Apply unified color scheme
 st.markdown(get_unified_css(), unsafe_allow_html=True)
-
-# Apply custom styling
-apply_custom_css()
 
 # Initialize session state
 if "parsed" not in st.session_state:
