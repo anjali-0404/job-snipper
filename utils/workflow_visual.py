@@ -1,5 +1,5 @@
 """
-Professional workflow visualization using matplotlib and seaborn.
+Professional workflow visualization using matplotlib.
 Creates beautiful, modern visualizations with a clean design aesthetic.
 """
 
@@ -7,13 +7,19 @@ import os
 import json
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
-import seaborn as sns
 import numpy as np
 from typing import Dict, Any
 
-
-# Set professional styling
-sns.set_style("whitegrid")
+# Try to import seaborn, but don't fail if not available
+try:
+    import seaborn as sns
+    SEABORN_AVAILABLE = True
+    # Set professional styling
+    sns.set_style("whitegrid")
+except ImportError:
+    SEABORN_AVAILABLE = False
+    # Use matplotlib default styling
+    plt.style.use('default')
 plt.rcParams["font.family"] = "sans-serif"
 plt.rcParams["font.sans-serif"] = ["Segoe UI", "Arial", "DejaVu Sans"]
 plt.rcParams["font.size"] = 10

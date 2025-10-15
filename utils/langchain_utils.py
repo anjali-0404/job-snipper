@@ -40,8 +40,8 @@ class GeminiWrapper:
 
         global _GENAI_CLIENT
         if _GENAI_CLIENT is None:
-            # try to pick up API key from env if available
-            api_key = os.getenv("GOOGLE_API_KEY")
+            # try to pick up API key from env if available (support both variable names)
+            api_key = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
             client_opts = None
             if api_key:
                 client_opts = ClientOptions(api_key=api_key)

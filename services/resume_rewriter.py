@@ -9,7 +9,8 @@ import os
 
 # Load env
 load_dotenv()
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+# Support both GOOGLE_API_KEY and GEMINI_API_KEY
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
 # Model is set in-code by default. Change this value to use a different Gemini model.
 # If you still want environment override, set `GENAI_MODEL` and uncomment the line below.
 MODEL = "models/gemini-2.5-flash"
@@ -158,3 +159,27 @@ def rewrite_resume(resume_json: dict, instruction: str = None) -> dict:
         resume_json["no_changes_needed"] = True
         resume_json["change_reason"] = f"Error occurred: {str(e)}"
         return resume_json
+
+
+class ResumeRewriter:
+    """Compatibility wrapper providing a class-based API expected by pages.
+
+    Methods:
+      - rewrite_resume(parsed_resume): returns rewritten text (string)
+      - tailor_to_job(parsed_resume, job_description): tailor to JD
+    """
+
+    def __init__(self):
+        pass
+
+    def rewrite_resume(self, parsed_resume: dict) -> str:
+        """Return rewritten resume text as a string."""
+        result = rewrite_resume(parsed_resume)
+        # Return rewritten text if available, otherwise fallback to raw_text
+        return result.get("rewritten_text", parsed_resume.get("raw_text", ""))
+
+    def tailor_to_job(self, parsed_resume: dict, job_description: str) -> str:
+        """Tailor resume to a job description by passing instruction to the rewrite function."""
+        instruction = f"Tailor the resume to the following job description:\n{job_description}"
+        result = rewrite_resume(parsed_resume, instruction=instruction)
+        return result.get("rewritten_text", parsed_resume.get("raw_text", ""))

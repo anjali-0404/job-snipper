@@ -6,7 +6,8 @@ try:
     from dotenv import load_dotenv
 
     load_dotenv()
-    GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+    # Support both GOOGLE_API_KEY and GEMINI_API_KEY
+    GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
     MODEL = os.getenv("GENAI_MODEL", "gemini-1.5-flash")
 
     if GOOGLE_API_KEY:

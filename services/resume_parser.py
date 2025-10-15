@@ -1,5 +1,6 @@
 import re
 
+
 def parse_resume_to_json(raw_text):
     """
     Extract structured data from resume text:
@@ -20,8 +21,23 @@ def parse_resume_to_json(raw_text):
             "skills": list(set(skills)),
             "education": list(set(education)),
             "experience": list(set(experience)),
-            "raw_text": raw_text
+            "raw_text": raw_text,
         }
     except Exception as e:
         print(f"Resume parsing failed: {e}")
         return {"skills": [], "education": [], "experience": [], "raw_text": raw_text}
+
+
+class ResumeParser:
+    """Compatibility wrapper providing a class-based API expected by pages.
+
+    Provides parse_resume(raw_text) which returns the same structure as
+    parse_resume_to_json.
+    """
+
+    def __init__(self):
+        pass
+
+    def parse_resume(self, raw_text: str):
+        """Parse resume text and return structured JSON-like dict."""
+        return parse_resume_to_json(raw_text)

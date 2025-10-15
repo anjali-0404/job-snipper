@@ -565,7 +565,7 @@ else:
                     ("behavioral", "🎯 Behavioral Questions"),
                     ("technical", "💻 Technical Questions"),
                     ("situational", "🤔 Situational Questions"),
-                    ("experience", "📋 Experience-Based Questions"),
+                    ("experience_based", "📋 Experience-Based Questions"),
                     ("achievements", "🏆 Achievement Questions"),
                 ]
 

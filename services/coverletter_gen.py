@@ -4,7 +4,8 @@ import os
 # This file now uses Google Gemini via the `google-ai-generativelanguage` SDK.
 # It exposes a thin wrapper compatible with the previous `llm.call(prompt)` usage.
 load_dotenv()
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+# Support both GOOGLE_API_KEY and GEMINI_API_KEY
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
 MODEL = os.getenv("GENAI_MODEL", "models/gemini-2.5-flash")
 
 try:

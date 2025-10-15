@@ -16,18 +16,19 @@ parts/
 sdist/
 var/
 wheels/
-pip-wheel-metadata/
-share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-MANIFEST
 
 # Virtual Environment
 venv/
 ENV/
 env/
 .venv
+
+# Environment Variables
+.env
+.env.local
 
 # IDE
 .vscode/
@@ -36,26 +37,21 @@ env/
 *.swo
 *~
 
-# Streamlit
-.streamlit/secrets.toml
-
-# Data
-data/uploads/*
-data/reports/*
-!data/reports/.gitkeep
-!data/uploads/.gitkeep
-
 # OS
 .DS_Store
 Thumbs.db
 
-# Environment
-.env
-.env.local
+# Data
+data/resumes/*
+data/reports/*
+data/visuals/*
+!data/resumes/.gitkeep
+!data/reports/.gitkeep
+!data/visuals/.gitkeep
 
 # Logs
 *.log
+logs/
 
-# Temporary files
-*.tmp
-*.temp
+# Streamlit
+.streamlit/secrets.toml
