@@ -385,7 +385,7 @@ class StreamlitCloudDataManager:
         st.sidebar.caption(f"📄 Actions: {summary['total_interactions']}")
         
         # Auto-save button
-        if st.sidebar.button("💾 Save Session Data", help="Save your session data to cloud"):
+        if st.sidebar.button("💾 Save Session Data", help="Save your session data to cloud", key="save_session_data_btn"):
             result = StreamlitCloudDataManager.save_user_data()
             if result['status'] == 'success':
                 st.sidebar.success("✅ Data saved!")

@@ -3,68 +3,56 @@ from langchain.agents import Tool, AgentExecutor
 from langchain.memory import ConversationBufferMemory
 
 import os
+import sys
 from dotenv import load_dotenv
+
+# Add parent directory to path
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from utils.llm_utils import generate_text
 
 load_dotenv()
 
 
-# Gemini SDK (optional) — we handle absence gracefully in calling modules
-try:
-    from google.ai import generativelanguage as genai
-    from google.ai.generativelanguage import types as gl_types
-    from google.api_core.client_options import ClientOptions
+class MultiModelLLMWrapper:
+    """Multi-model LLM wrapper exposing .call(prompt) interface for LangChain compatibility."""
 
-    # create a client lazily in the wrapper if the user provides an API key
-    _GENAI_CLIENT = None
-    _HAS_GENAI = True
-except Exception:
-    genai = None
-    _GENAI_CLIENT = None
-    _HAS_GENAI = False
-
-# Default model; change this constant to point to another Gemini model if needed.
-MODEL = os.getenv("GENAI_MODEL", "models/gemini-2.5-flash")
-
-
-class GeminiWrapper:
-    """Thin wrapper exposing .call(prompt) similar to LangChain's ChatOpenAI."""
-
-    def __init__(self, model: str = MODEL, temperature: float = 0.0):
-        self.model = model
+    def __init__(self, temperature: float = 0.0, max_tokens: int = 2048, preferred_provider: str = None):
         self.temperature = temperature
+        self.max_tokens = max_tokens
+        self.preferred_provider = preferred_provider
 
     def call(self, prompt: str) -> str:
-        # Initialize client on first use (allows module import without installed SDK)
-        if not _HAS_GENAI:
-            raise RuntimeError("google-ai-generativelanguage SDK not available")
-
-        global _GENAI_CLIENT
-        if _GENAI_CLIENT is None:
-            # try to pick up API key from env if available (support both variable names)
-            api_key = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
-            client_opts = None
-            if api_key:
-                client_opts = ClientOptions(api_key=api_key)
-            # Use the TextServiceClient exposed on the generativelanguage module
-            _GENAI_CLIENT = genai.TextServiceClient(client_options=client_opts)
-        request = gl_types.GenerateTextRequest(
-            model=self.model,
-            prompt=gl_types.TextPrompt(text=prompt),
-            temperature=self.temperature,
-        )
-
-        resp = _GENAI_CLIENT.generate_text(request=request)
-        if hasattr(resp, "candidates") and resp.candidates:
-            return "\n".join([c.output for c in resp.candidates])
-        return str(resp)
+        """Generate text using multi-model LLM with automatic fallback."""
+        try:
+            return generate_text(
+                prompt,
+                temperature=self.temperature,
+                max_tokens=self.max_tokens,
+                preferred_provider=self.preferred_provider
+            )
+        except Exception as e:
+            raise RuntimeError(f"Multi-model LLM generation failed: {e}")
 
 
 def make_gemini_llm(
     temperature: float = 0.0, model_name: Optional[str] = None
-) -> GeminiWrapper:
-    """Return a GeminiWrapper instance (wrap creation for reuse)."""
-    model = model_name or MODEL
-    return GeminiWrapper(model=model, temperature=temperature)
+) -> MultiModelLLMWrapper:
+    """
+    Return a MultiModelLLMWrapper instance (maintains backward compatibility).
+    Note: model_name is deprecated - use preferred_provider instead.
+    """
+    # Map old model names to providers for backward compatibility
+    provider = None
+    if model_name:
+        if "gemini" in model_name.lower():
+            provider = "gemini"
+        elif "gpt" in model_name.lower():
+            provider = "openai"
+        elif "claude" in model_name.lower():
+            provider = "anthropic"
+    
+    return MultiModelLLMWrapper(temperature=temperature, preferred_provider=provider)
 
 
 def make_tools_from_funcs(funcs: List[Dict[str, Any]]):

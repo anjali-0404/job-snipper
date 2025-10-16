@@ -1,77 +1,33 @@
 from dotenv import load_dotenv
 import os
+import sys
 
-# NOTE: This file uses Google's Generative AI (Gemini) via the
-# `google-ai-generativelanguage` SDK (recommended option B).
-# Install: pip install google-ai-generativelanguage
-# Set your API key in the environment variable GOOGLE_API_KEY (or configure
-# application default credentials).
+# Add parent directory to path
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from utils.llm_utils import generate_text
 
 # Load env
 load_dotenv()
-# Support both GOOGLE_API_KEY and GEMINI_API_KEY
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
-# Model is set in-code by default. Change this value to use a different Gemini model.
-# If you still want environment override, set `GENAI_MODEL` and uncomment the line below.
-MODEL = "models/gemini-2.5-flash"
-# GENAI_MODEL = os.getenv("GENAI_MODEL", MODEL)  # optional override
-
-try:
-    # Newer GenAI client
-    from google.ai import generativelanguage as genai
-    from google.ai.generativelanguage import types as gl_types
-    from google.ai.generativelanguage.services import text_service
-    from google.api_core.client_options import ClientOptions
-
-    # Initialize client; if GOOGLE_API_KEY is set, we pass it via client_options
-    client_opts = None
-    if GOOGLE_API_KEY:
-        client_opts = ClientOptions(api_key=GOOGLE_API_KEY)
-
-    _GENAI_CLIENT = text_service.TextServiceClient(client_options=client_opts)
-    _HAS_GEMINI = True
-except Exception as _e:
-    # If the Gemini SDK isn't installed or fails to import, we'll keep a graceful fallback.
-    print(
-        "Warning: google-ai-generativelanguage SDK not available. Resume rewriter will use a noop fallback.\n",
-        "Install with: pip install google-ai-generativelanguage",
-    )
-    _GENAI_CLIENT = None
-    genai = None
-    _HAS_GEMINI = False
 
 
-def _call_gemini(
-    prompt: str, model: str | None = None, temperature: float = 0.3
+def _call_llm(
+    prompt: str, temperature: float = 0.3, max_tokens: int = 2048, preferred_provider: str = None
 ) -> str:
-    """Call Gemini model and return the text output.
+    """Call multi-model LLM and return the text output.
 
     Inputs:
       - prompt: the instruction + input text
-      - model: Gemini model; default is the value of GENAI_MODEL
       - temperature: creativity control
+      - max_tokens: maximum tokens to generate
+      - preferred_provider: preferred LLM provider (groq, gemini, openai, anthropic)
 
     Returns: generated text (str) or raises on failure.
     """
-    if not _HAS_GEMINI or _GENAI_CLIENT is None:
-        raise RuntimeError("Gemini SDK not available")
-
-    if model is None:
-        model = MODEL
-
-    # Build request using the newer client types
-    request = gl_types.GenerateTextRequest(
-        model=model,
-        prompt=gl_types.TextPrompt(text=prompt),
-        temperature=temperature,
-    )
-
-    resp = _GENAI_CLIENT.generate_text(request=request)
-
-    # The response has `candidates` with `.output`
-    if hasattr(resp, "candidates") and resp.candidates:
-        return "\n".join([c.output for c in resp.candidates])
-    return str(resp)
+    try:
+        return generate_text(prompt, temperature, max_tokens, preferred_provider)
+    except Exception as e:
+        raise RuntimeError(f"LLM generation failed: {e}")
 
 
 def rewrite_resume(resume_json: dict, instruction: str = None) -> dict:
@@ -114,9 +70,9 @@ def rewrite_resume(resume_json: dict, instruction: str = None) -> dict:
                 "Output only the rewritten resume bullets."
             )
 
-        if _HAS_GEMINI:
-            # Use Gemini to generate text
-            rewritten_text = _call_gemini(prompt, model=None, temperature=0.3)
+        try:
+            # Use multi-model LLM to generate text
+            rewritten_text = _call_llm(prompt, temperature=0.3, max_tokens=2048)
 
             # Check if AI returned essentially the same content
             raw_clean = raw_text.strip().lower().replace(" ", "").replace("\n", "")
@@ -142,9 +98,9 @@ def rewrite_resume(resume_json: dict, instruction: str = None) -> dict:
                     print(
                         f"✓ Significant improvements made ({(1 - similarity) * 100:.1f}% different)"
                     )
-        else:
+        except Exception as llm_error:
             # Graceful fallback: return the original text unchanged
-            print("⚠ Gemini not available; returning original text as rewritten_text")
+            print(f"⚠ LLM not available ({llm_error}); returning original text as rewritten_text")
             rewritten_text = raw_text
             resume_json["no_changes_needed"] = True
             resume_json["change_reason"] = (

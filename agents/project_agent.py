@@ -1,22 +1,14 @@
 from services.project_suggester import suggest_projects as _suggest_projects_service
 import os
+import sys
 
-try:
-    import google.generativeai as genai
-    from dotenv import load_dotenv
+# Add parent directory to path
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-    load_dotenv()
-    # Support both GOOGLE_API_KEY and GEMINI_API_KEY
-    GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
-    MODEL = os.getenv("GENAI_MODEL", "gemini-1.5-flash")
+from utils.llm_utils import get_llm, generate_text
+from dotenv import load_dotenv
 
-    if GOOGLE_API_KEY:
-        genai.configure(api_key=GOOGLE_API_KEY)
-        _HAS_GEMINI = True
-    else:
-        _HAS_GEMINI = False
-except Exception:
-    _HAS_GEMINI = False
+load_dotenv()
 
 
 def suggest_projects(skills_list, num_projects=5):
@@ -57,18 +49,15 @@ Duration: {{time}}
 Make projects practical, portfolio-worthy, and progressively challenging.
 """
 
-        if _HAS_GEMINI:
-            # Use Gemini AI to generate projects
-            model = genai.GenerativeModel(MODEL)
-            response = model.generate_content(
-                prompt, generation_config=genai.GenerationConfig(temperature=0.7)
-            )
-            response_text = response.text
+        llm = get_llm()
+        if llm.is_available():
+            # Use multi-model LLM with automatic fallback
+            response_text = generate_text(prompt, temperature=0.7, max_tokens=2048)
             # Parse the response into structured projects
             projects = _parse_project_response(response_text, skills_list)
             return projects
         else:
-            # Fallback when Gemini is not available
+            # Fallback when no LLM is available
             return _generate_fallback_projects(skills_list, num_projects)
 
     except Exception as e:
@@ -194,7 +183,155 @@ def _generate_fallback_projects(skills_list, num_projects):
         },
     ]
 
+def _generate_fallback_projects(skills_list, num_projects):
+    """Generate simple project suggestions without AI"""
+    # Map project templates with their ACTUAL required skills
+    project_templates = [
+        {
+            "title": "Portfolio Website with {skill}",
+            "description": "Build a personal portfolio website showcasing your projects and skills using {skill}. Include responsive design, contact form, and project gallery.",
+            "difficulty": "Beginner",
+            "duration": "1-2 weeks",
+            "required_skills": [
+                "HTML",
+                "CSS",
+                "JavaScript",
+                "React",
+                "Vue",
+                "Angular",
+                "Next.js",
+            ],
+        },
+        {
+            "title": "Task Management App using {skill}",
+            "description": "Create a full-stack task management application with user authentication, CRUD operations, and real-time updates using {skill}.",
+            "difficulty": "Intermediate",
+            "duration": "2-3 weeks",
+            "required_skills": [
+                "React",
+                "Node.js",
+                "Express",
+                "MongoDB",
+                "PostgreSQL",
+                "REST API",
+                "Authentication",
+            ],
+        },
+        {
+            "title": "Data Dashboard with {skill}",
+            "description": "Build an interactive data visualization dashboard that fetches, processes, and displays data using {skill}. Include charts, filters, and export functionality.",
+            "difficulty": "Intermediate",
+            "duration": "2-4 weeks",
+            "required_skills": [
+                "Python",
+                "Pandas",
+                "Matplotlib",
+                "Seaborn",
+                "Plotly",
+                "D3.js",
+                "Tableau",
+                "Power BI",
+            ],
+        },
+        {
+            "title": "E-commerce Platform using {skill}",
+            "description": "Develop a complete e-commerce solution with product catalog, shopping cart, payment integration, and order management using {skill}.",
+            "difficulty": "Advanced",
+            "duration": "4-6 weeks",
+            "required_skills": [
+                "React",
+                "Node.js",
+                "Payment Gateway",
+                "Stripe",
+                "Database",
+                "AWS",
+                "Docker",
+            ],
+        },
+        {
+            "title": "Real-time Chat Application with {skill}",
+            "description": "Build a real-time messaging application with WebSocket support, user presence, typing indicators, and message history using {skill}.",
+            "difficulty": "Advanced",
+            "duration": "3-5 weeks",
+            "required_skills": [
+                "WebSocket",
+                "Socket.io",
+                "Node.js",
+                "Express",
+                "Docker",
+                "Redis",
+                "MongoDB",
+            ],
+        },
+        {
+            "title": "Machine Learning Model with {skill}",
+            "description": "Develop a machine learning model for prediction or classification tasks using {skill}. Include data preprocessing, model training, and evaluation metrics.",
+            "difficulty": "Advanced",
+            "duration": "3-6 weeks",
+            "required_skills": [
+                "Python",
+                "TensorFlow",
+                "PyTorch",
+                "Scikit-learn",
+                "Keras",
+                "Machine Learning",
+                "Data Science",
+            ],
+        },
+        {
+            "title": "Mobile App with {skill}",
+            "description": "Create a mobile application with user interface, local data storage, and API integration using {skill}.",
+            "difficulty": "Intermediate",
+            "duration": "2-4 weeks",
+            "required_skills": [
+                "React Native",
+                "Flutter",
+                "Swift",
+                "Kotlin",
+                "Android",
+                "iOS",
+            ],
+        },
+        {
+            "title": "API Gateway/Microservices with {skill}",
+            "description": "Build a scalable microservices architecture with API gateway, service discovery, and containerization using {skill}.",
+            "difficulty": "Advanced",
+            "duration": "3-5 weeks",
+            "required_skills": [
+                "Docker",
+                "Kubernetes",
+                "Node.js",
+                "Go",
+                "Java",
+                "Spring Boot",
+                "Microservices",
+            ],
+        },
+        {
+            "title": "Cloud Infrastructure Project with {skill}",
+            "description": "Design and deploy a cloud-based infrastructure with load balancing, auto-scaling, and monitoring using {skill}.",
+            "difficulty": "Advanced",
+            "duration": "2-4 weeks",
+            "required_skills": ["AWS", "Azure", "GCP", "Cloud", "Infrastructure", "DevOps"],
+        },
+        {
+            "title": "Content Management System with {skill}",
+            "description": "Build a CMS with user roles, content versioning, and publishing workflow using {skill}.",
+            "difficulty": "Intermediate",
+            "duration": "3-4 weeks",
+            "required_skills": [
+                "Node.js",
+                "Express",
+                "React",
+                "PostgreSQL",
+                "Authentication",
+            ],
+        },
+    ]
+
     projects = []
+    used_skills = set()  # Track used skills to avoid duplicates
+    
     for i in range(min(num_projects, len(project_templates))):
         template = project_templates[i]
 
@@ -205,15 +342,26 @@ def _generate_fallback_projects(skills_list, num_projects):
             if s.lower() in [req.lower() for req in template["required_skills"]]
         ]
 
-        if matching_skills:
-            # Use the first matching skill
+        # Filter out already used skills to ensure variety
+        unused_matching_skills = [s for s in matching_skills if s.lower() not in used_skills]
+        
+        if unused_matching_skills:
+            # Use the first unused matching skill
+            skill = unused_matching_skills[0]
+            used_skills.add(skill.lower())
+            # Get all matching skills for the project
+            project_skills = (
+                unused_matching_skills[:3] if len(unused_matching_skills) >= 3 else unused_matching_skills
+            )
+        elif matching_skills:
+            # If all matching skills are used, use first matching skill anyway
             skill = matching_skills[0]
             # Get all matching skills for the project
             project_skills = (
                 matching_skills[:3] if len(matching_skills) >= 3 else matching_skills
             )
         else:
-            # If no match, use the template's first required skill
+            # If no match, use template's first required skill
             skill = template["required_skills"][0]
             # Use template's required skills
             project_skills = template["required_skills"][:3]

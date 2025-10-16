@@ -3,11 +3,14 @@ gradio>=4.0.0
 # Pin core LLM and SDK versions to resolve dependency conflicts reported during install
 langchain>=0.3.27
 google-ai-generativelanguage>=0.7,<1
+google-generativeai>=0.8.0  # Google Gemini SDK
 requests
 pdfplumber
 python-docx
 docx2txt
-groq>=0.31.0        # Groq API client wrapper
+groq>=0.31.0        # Groq API client wrapper (primary)
+openai>=1.0.0       # OpenAI API client (optional)
+anthropic>=0.18.0   # Anthropic Claude API client (optional)
 langchain-exa
 # vector DB client, e.g. chromadb, pinecone, etc.
 chromadb

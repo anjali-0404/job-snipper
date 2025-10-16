@@ -62,7 +62,6 @@ with col1:
                     parsed = parse_resume(st.session_state.file_path, st.session_state.file_type)
                     st.session_state.parsed = parsed
                     st.success("✅ Resume parsed successfully!")
-                    st.balloons()
                 except Exception as e:
                     st.error(f"❌ Error parsing resume: {e}")
 
@@ -107,13 +106,10 @@ if st.session_state.parsed:
 
     # Quick link to Project Suggestions
     st.markdown("---")
-    if st.button("🚀 Go to Project Suggestions", use_container_width=True):
-        try:
-            st.experimental_set_query_params(page="5b_🚀_Project_Suggestions")
-        except Exception:
-            st.info("Please use the sidebar to navigate to Project Suggestions.")
-
-# Feedback and autosave
+    if st.button("🚀 Suggest Projects", use_container_width=True, type="primary"):
+        # Save session data before navigation
+        auto_save_session()
+        st.query_params["page"] = "5b_🚀_Project_Suggestions"# Feedback and autosave
 st.markdown("---")
 show_feedback_widget("Upload Resume")
 auto_save_session()
