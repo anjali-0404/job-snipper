@@ -12,6 +12,7 @@ import urllib.parse
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from utils.color_scheme import get_unified_css
+from utils.user_analytics import init_analytics, track_page, auto_save_session, show_profile_form
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -23,6 +24,10 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
+
+# Initialize analytics for this page
+analytics = init_analytics()
+track_page("Home")
 
 # Apply unified CSS
 st.markdown(get_unified_css(), unsafe_allow_html=True)
@@ -50,7 +55,8 @@ st.markdown(
             Leverage cutting-edge AI to create, optimize, and manage your professional documents with unprecedented precision
         </p>
         <div style="margin-top: 2rem;">
-            <a href="{start_page}" target="_self" style="text-decoration: none;">
+            <!-- Use JS navigation to ensure Streamlit picks up the query param change -->
+            <a href="#" onclick="window.location.href='{start_page}'; return false;" style="text-decoration: none;">
                 <button style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; padding: 1rem 3rem; font-size: 1.2rem; font-weight: 700; border-radius: 50px; cursor: pointer; box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4); transition: all 0.3s ease; margin-right: 1rem;">
                     🚀 Get Started Free
                 </button>
@@ -476,3 +482,11 @@ with st.sidebar:
     st.markdown("---")
 
     st.info("💡 **Tip**: Start by uploading your resume to unlock all features!")
+
+# User Profile Collection Section
+st.markdown("---")
+with st.expander("👤 Complete Your Profile", expanded=False):
+    show_profile_form()
+
+# Analytics sidebar (auto-saves session data)
+auto_save_session()
