@@ -5,6 +5,7 @@ Generate optimized content for LinkedIn, GitHub, Twitter, and more.
 
 import streamlit as st
 import sys
+import uuid
 from pathlib import Path
 
 # Add parent directory to path
@@ -257,7 +258,7 @@ with tab1:
             seo_optimized = st.checkbox("SEO Optimized", value=True)
 
     # Generate Button
-    if st.button("✨ Generate Content", type="primary", use_container_width=True):
+    if st.button("✨ Generate Content", type="primary", use_container_width=True, key=f"generate_content_{uuid.uuid4()}"):
         if not full_name and not uploaded_file:
             st.error("❌ Please provide your name or upload a resume")
         else:
@@ -377,11 +378,11 @@ with tab1:
             )
 
         with col2:
-            if st.button("📋 Copy to Clipboard"):
+            if st.button("📋 Copy to Clipboard", key=f"copy_to_clipboard_{uuid.uuid4()}"):
                 st.write("✅ Copied! (Use Ctrl+C to copy)")
 
         with col3:
-            if st.button("🔄 Generate Again"):
+            if st.button("🔄 Generate Again", key=f"generate_again_{uuid.uuid4()}"):
                 st.session_state.generated_content = {}
                 st.rerun()
 

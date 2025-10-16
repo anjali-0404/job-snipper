@@ -5,6 +5,7 @@ Generate role-specific interview questions and practice answers.
 
 import streamlit as st
 import sys
+import uuid
 from pathlib import Path
 
 # Add parent directory to path
@@ -161,7 +162,7 @@ with col2:
 
 # Generate Button
 if st.button(
-    "🚀 Generate Interview Questions", type="primary", use_container_width=True
+    "🚀 Generate Interview Questions", type="primary", use_container_width=True, key=f"generate_interview_questions_{uuid.uuid4()}"
 ):
     if not job_role:
         st.error("❌ Please enter a job role")
@@ -286,7 +287,7 @@ if st.session_state.interview_questions:
         )
 
     with col3:
-        if st.button("🔄 Generate New Questions"):
+        if st.button("🔄 Generate New Questions", key=f"generate_new_questions_{uuid.uuid4()}"):
             st.session_state.interview_questions = None
             st.rerun()
 

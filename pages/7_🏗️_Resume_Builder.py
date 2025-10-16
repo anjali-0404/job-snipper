@@ -6,6 +6,7 @@ Build a professional resume from scratch with a guided form interface.
 import streamlit as st
 import os
 import sys
+import uuid
 from datetime import datetime
 
 # Add parent directory to path
@@ -63,6 +64,7 @@ with col2:
         "👁️ Preview Resume" if not st.session_state.preview_mode else "✏️ Edit Resume",
         use_container_width=True,
         type="primary",
+        key=f"toggle_preview_{uuid.uuid4()}",
     ):
         st.session_state.preview_mode = not st.session_state.preview_mode
         st.rerun()
@@ -677,7 +679,7 @@ else:
             )
 
     with col5:
-        if st.button("🔄 New Resume", use_container_width=True):
+        if st.button("🔄 New Resume", use_container_width=True, key=f"new_resume_{uuid.uuid4()}"):
             st.session_state.builder_data = {
                 "personal": {},
                 "summary": "",

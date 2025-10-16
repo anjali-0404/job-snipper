@@ -5,6 +5,7 @@ Comprehensive resume optimization with all advanced features.
 
 import streamlit as st
 import sys
+import uuid
 from pathlib import Path
 
 # Add parent directory to path
@@ -132,7 +133,7 @@ else:
         col1, col2 = st.columns([2, 1])
 
         with col1:
-            if st.button("Grade My Resume", type="primary"):
+            if st.button("Grade My Resume", type="primary", key=f"grade_resume_{uuid.uuid4()}"):
                 grader = ResumeGrader()
 
                 with st.spinner("Analyzing resume..."):
@@ -197,7 +198,7 @@ else:
             st.markdown("### 👁️ 6-Second Scan Test")
             st.markdown("_What recruiters see in 6 seconds_")
 
-            if st.button("Run 6-Second Scan"):
+            if st.button("Run 6-Second Scan", key=f"run_6_second_scan_{uuid.uuid4()}"):
                 grader = ResumeGrader()
                 scan_results = grader.simulate_6_second_scan(
                     st.session_state.resume_text
@@ -228,7 +229,7 @@ else:
             placeholder="Paste the full job description here...",
         )
 
-        if st.button("Analyze Match", type="primary") and job_description:
+        if st.button("Analyze Match", type="primary", key=f"analyze_match_{uuid.uuid4()}") and job_description:
             matcher = JobMatcher()
 
             with st.spinner("Analyzing match..."):
@@ -319,7 +320,7 @@ else:
         col1, col2 = st.columns([2, 1])
 
         with col1:
-            if st.button("Scan for ATS Compatibility", type="primary"):
+            if st.button("Scan for ATS Compatibility", type="primary", key=f"scan_ats_compatibility_{uuid.uuid4()}"):
                 scanner = ATSScanner()
 
                 with st.spinner("Scanning resume..."):
@@ -368,7 +369,7 @@ else:
         with col2:
             st.markdown("### 🏢 Test Against ATS Systems")
 
-            if st.button("Simulate ATS Systems"):
+            if st.button("Simulate ATS Systems", key=f"simulate_ats_systems_{uuid.uuid4()}"):
                 scanner = ATSScanner()
                 systems = scanner.simulate_ats_systems(st.session_state.resume_text)
 
@@ -414,7 +415,7 @@ else:
                 ["Mid-Level", "Senior", "Lead", "Manager", "Director", "Executive"],
             )
 
-        if st.button("Rewrite Resume", type="primary"):
+        if st.button("Rewrite Resume", type="primary", key=f"rewrite_resume_{uuid.uuid4()}"):
             rewriter = ResumeRewriter()
 
             with st.spinner("Rewriting resume..."):
@@ -440,7 +441,7 @@ else:
                         mime="text/plain",
                     )
                 with col2:
-                    if st.button("💾 Save as Version"):
+                    if st.button("💾 Save as Version", key=f"save_as_version_{uuid.uuid4()}"):
                         version_manager = VersionManager()
                         version_id = version_manager.create_version(
                             rewritten,
@@ -469,7 +470,7 @@ else:
 
         job_desc_cl = st.text_area("Job Description (optional)", height=150)
 
-        if st.button("Generate Cover Letter", type="primary"):
+        if st.button("Generate Cover Letter", type="primary", key=f"generate_cover_letter_{uuid.uuid4()}"):
             # This would integrate with your existing cover letter agent
             st.info(
                 "Cover letter generation would use your existing coverletter_agent.py"
@@ -509,7 +510,7 @@ else:
                 "Tone", ["Professional", "Confident", "Casual"]
             )
 
-            if st.button("Generate Email"):
+            if st.button("Generate Email", key=f"generate_email_{uuid.uuid4()}"):
                 email = generator.generate_recruiter_email(
                     recruiter_name,
                     company,
@@ -538,7 +539,7 @@ else:
 
             discussion_point = st.text_input("Specific Discussion Point")
 
-            if st.button("Generate Thank You Email"):
+            if st.button("Generate Thank You Email", key=f"generate_thank_you_email_{uuid.uuid4()}"):
                 email = generator.generate_thank_you_email(
                     interviewer_name,
                     position_ty,
@@ -554,7 +555,7 @@ else:
     with tabs[6]:
         st.header("🎤 Interview Preparation")
 
-        if st.button("Generate Interview Questions", type="primary"):
+        if st.button("Generate Interview Questions", type="primary", key=f"generate_interview_questions_{uuid.uuid4()}"):
             prep = InterviewPrep()
 
             with st.spinner("Generating questions..."):
@@ -577,7 +578,7 @@ else:
         st.markdown("---")
         st.markdown("### 🌟 STAR Method Guide")
 
-        if st.button("Get STAR Templates"):
+        if st.button("Get STAR Templates", key=f"get_star_templates_{uuid.uuid4()}"):
             prep = InterviewPrep()
             templates = prep.generate_star_templates(st.session_state.resume_text)
 
@@ -591,7 +592,7 @@ else:
         st.markdown("---")
         st.markdown("### ❓ Questions to Ask Interviewer")
 
-        if st.button("Get Questions to Ask"):
+        if st.button("Get Questions to Ask", key=f"get_questions_to_ask_{uuid.uuid4()}"):
             prep = InterviewPrep()
             questions_to_ask = prep.generate_questions_to_ask()
 
@@ -606,7 +607,7 @@ else:
 
         target_role = st.text_input("Target Role/Job Description (optional)")
 
-        if st.button("Analyze Skills", type="primary"):
+        if st.button("Analyze Skills", type="primary", key=f"analyze_skills_{uuid.uuid4()}"):
             analyzer = SkillsAnalyzer()
 
             with st.spinner("Analyzing skills..."):
@@ -719,7 +720,7 @@ else:
             with col2:
                 years_exp = st.number_input("Years Experience", 1, 50, 5)
 
-            if st.button("Generate LinkedIn Profile"):
+            if st.button("Generate LinkedIn Profile", key=f"generate_linkedin_profile_{uuid.uuid4()}"):
                 # Headline
                 headline = social_gen.generate_linkedin_headline(
                     title_li, "Technology Innovation", "Driving Results"
@@ -749,7 +750,7 @@ else:
                 ["Python", "JavaScript"],
             )
 
-            if st.button("Generate GitHub Profile"):
+            if st.button("Generate GitHub Profile", key=f"generate_github_profile_{uuid.uuid4()}"):
                 bio = social_gen.generate_github_bio(focus_area, languages)
                 st.markdown("**GitHub Bio:**")
                 st.info(bio)
@@ -765,7 +766,7 @@ else:
                 st.code(readme, language="markdown")
 
         elif platform == "All Platforms":
-            if st.button("Generate All Profiles"):
+            if st.button("Generate All Profiles", key=f"generate_all_profiles_{uuid.uuid4()}"):
                 profiles = social_gen.generate_all_profiles(
                     {
                         "name": st.session_state.parsed_resume.get(
@@ -819,7 +820,7 @@ else:
             ["Python", "AWS"],
         )
 
-        if st.button("Estimate Salary", type="primary"):
+        if st.button("Estimate Salary", type="primary", key=f"estimate_salary_{uuid.uuid4()}"):
             estimator = SalaryEstimator()
 
             with st.spinner("Calculating market value..."):
@@ -881,7 +882,7 @@ else:
                     st.markdown(f"**Recommendation:** {comparison['recommendation']}")
 
                 # Negotiation script
-                if st.button("Generate Negotiation Script"):
+                if st.button("Generate Negotiation Script", key=f"generate_negotiation_script_{uuid.uuid4()}"):
                     target = st.number_input(
                         "Target Salary", value=estimate["estimated_range"]["max"]
                     )
@@ -959,7 +960,7 @@ else:
                 version_1 = st.selectbox("Version 1", version_ids, key="v1")
                 version_2 = st.selectbox("Version 2", version_ids, key="v2")
 
-                if st.button("Compare Versions"):
+                if st.button("Compare Versions", key=f"compare_versions_{uuid.uuid4()}"):
                     comparison = version_manager.compare_versions(version_1, version_2)
 
                     st.markdown("**Winner:** " + comparison["winner"])

@@ -5,6 +5,7 @@ Manage multiple resume versions, compare changes, and restore previous versions.
 
 import streamlit as st
 import sys
+import uuid
 from pathlib import Path
 from datetime import datetime
 
@@ -172,7 +173,7 @@ with st.sidebar:
             height=100,
         )
 
-        if st.button("💾 Save Version", type="primary"):
+        if st.button("💾 Save Version", type="primary", key=f"save_version_{uuid.uuid4()}"):
             try:
                 result = st.session_state.version_manager.save_version(
                     file=uploaded_file, name=version_name, notes=version_notes
@@ -371,7 +372,7 @@ with tab2:
                 ),
             )
 
-        if st.button("📊 Compare Versions", type="primary"):
+        if st.button("📊 Compare Versions", type="primary", key=f"compare_versions_{uuid.uuid4()}"):
             with st.spinner("🔄 Comparing versions..."):
                 try:
                     comparison = st.session_state.version_manager.compare_versions(
@@ -458,7 +459,7 @@ with tab2:
 
                     # Export Comparison
                     st.markdown("---")
-                    if st.button("📥 Export Comparison Report"):
+                    if st.button("📥 Export Comparison Report", key=f"export_comparison_report_{uuid.uuid4()}"):
                         report = f"""
 Version Comparison Report
 Generated: {datetime.now().strftime("%Y-%m-%d %H:%M")}
@@ -559,7 +560,7 @@ with tab4:
             "Archive after (days)", min_value=7, max_value=365, value=30
         )
 
-        if st.button("💾 Save Settings"):
+        if st.button("💾 Save Settings", key=f"save_settings_{uuid.uuid4()}"):
             st.success("✅ Settings saved successfully!")
 
     with col2:
@@ -567,17 +568,17 @@ with tab4:
 
         st.warning("⚠️ These actions cannot be undone!")
 
-        if st.button("🗑️ Delete All Archived"):
+        if st.button("🗑️ Delete All Archived", key=f"delete_all_archived_{uuid.uuid4()}"):
             archived_count = len([v for v in versions if v.get("archived", False)])
             if archived_count > 0:
                 st.error(f"Would delete {archived_count} archived versions")
             else:
                 st.info("No archived versions to delete")
 
-        if st.button("🗑️ Delete All Versions"):
+        if st.button("🗑️ Delete All Versions", key=f"delete_all_versions_{uuid.uuid4()}"):
             st.error(f"Would delete all {len(versions)} versions")
 
-        if st.button("📤 Export All Versions"):
+        if st.button("📤 Export All Versions", key=f"export_all_versions_{uuid.uuid4()}"):
             st.info("Would create ZIP file with all versions")
 
     st.markdown("---")

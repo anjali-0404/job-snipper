@@ -5,6 +5,7 @@ Analyze your skills against industry standards and get personalized recommendati
 
 import streamlit as st
 import sys
+import uuid
 from pathlib import Path
 import plotly.graph_objects as go
 import plotly.express as px
@@ -189,7 +190,7 @@ with tab1:
     )
 
     # Analyze Button
-    if st.button("🔍 Analyze My Skills", type="primary", use_container_width=True):
+    if st.button("🔍 Analyze My Skills", type="primary", use_container_width=True, key=f"analyze_my_skills_{uuid.uuid4()}"):
         if not target_role:
             st.error("❌ Please enter a target role")
         elif not current_tech_skills and not uploaded_file:
@@ -512,7 +513,7 @@ with tab4:
 
         # Download Learning Plan
         st.markdown("---")
-        if st.button("📥 Download Learning Plan", type="secondary"):
+        if st.button("📥 Download Learning Plan", type="secondary", key=f"download_learning_plan_{uuid.uuid4()}"):
             # Generate downloadable plan
             plan_text = f"""
 # Skills Development Plan

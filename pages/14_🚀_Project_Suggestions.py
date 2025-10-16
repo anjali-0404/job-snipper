@@ -6,6 +6,7 @@ Generate projects to fill skill gaps and build your portfolio.
 import streamlit as st
 import os
 import sys
+import uuid
 import json
 from datetime import datetime
 
@@ -25,7 +26,7 @@ st.markdown(get_unified_css(), unsafe_allow_html=True)
 # Ensure parsed resume exists
 if "parsed" not in st.session_state or not st.session_state.parsed:
     st.warning("⚠️ Please upload and parse a resume first!")
-    if st.button("📄 Go to Upload Page"):
+    if st.button("📄 Go to Upload Page", key=f"go_to_upload_projects_{uuid.uuid4()}"):
         st.switch_page("pages/1_📄_Upload_Resume.py")
     st.stop()
 
@@ -52,7 +53,7 @@ with col1:
 with col2:
     num_projects = st.selectbox("Number of Projects", [3, 5, 7, 10], index=1)
 
-if st.button("🚀 Get Project Suggestions", use_container_width=True):
+if st.button("🚀 Get Project Suggestions", use_container_width=True, key=f"get_project_suggestions_{uuid.uuid4()}"):
     skills_list = [s.strip() for s in skills_input.split(",") if s.strip()]
     if not skills_list:
         st.warning("Please enter at least one skill to generate project suggestions.")
@@ -116,12 +117,12 @@ if st.session_state.get("projects"):
         )
 
     with col2d:
-        if st.button("🔄 Regenerate Projects", use_container_width=True):
+        if st.button("🔄 Regenerate Projects", use_container_width=True, key=f"regenerate_projects_{uuid.uuid4()}"):
             st.session_state.projects = None
             st.rerun()
 
     with col3d:
-        if st.button("➡️ Continue to Job Search", use_container_width=True, type="primary"):
+        if st.button("➡️ Continue to Job Search", use_container_width=True, type="primary", key=f"continue_to_job_search_{uuid.uuid4()}"):
             st.switch_page("pages/6_🔍_Job_Search.py")
 
 # Progress indicator

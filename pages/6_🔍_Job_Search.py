@@ -6,6 +6,7 @@ Search for relevant jobs based on your resume and preferences.
 import streamlit as st
 import os
 import sys
+import uuid
 import pandas as pd
 from datetime import datetime
 
@@ -40,7 +41,7 @@ st.markdown("# 🔍 Job Search & Recommendations")
 # Check if resume is parsed
 if not st.session_state.parsed:
     st.warning("⚠️ Please upload and parse a resume first!")
-    if st.button("📄 Go to Upload Page"):
+    if st.button("📄 Go to Upload Page", key=f"go_to_upload_{uuid.uuid4()}"):
         st.switch_page("pages/1_📄_Upload_Resume.py")
     st.stop()
 
@@ -143,6 +144,7 @@ with col2:
         use_container_width=True,
         type="primary",
         disabled=not can_search,
+        key=f"search_jobs_{uuid.uuid4()}",
     ):
         with st.spinner("🤖 AI is searching for relevant jobs..."):
             try:
@@ -455,12 +457,12 @@ if st.session_state.job_results:
                     )
 
         with col2:
-            if st.button("🔄 New Search", use_container_width=True):
+            if st.button("🔄 New Search", use_container_width=True, key=f"new_search_{uuid.uuid4()}"):
                 st.session_state.job_results = None
                 st.rerun()
 
         with col3:
-            if st.button("🏠 Back to Home", use_container_width=True):
+            if st.button("🏠 Back to Home", use_container_width=True, key=f"back_to_home_{uuid.uuid4()}"):
                 st.switch_page("Home.py")
 
 else:

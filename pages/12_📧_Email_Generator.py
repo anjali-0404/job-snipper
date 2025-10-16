@@ -5,6 +5,7 @@ Generate polished emails for networking, follow-ups, applications, and more.
 
 import streamlit as st
 import sys
+import uuid
 from pathlib import Path
 from datetime import datetime
 
@@ -268,7 +269,7 @@ with tab1:
     )
 
     # Generate Button
-    if st.button("✨ Generate Email", type="primary", use_container_width=True):
+    if st.button("✨ Generate Email", type="primary", use_container_width=True, key=f"generate_email_{uuid.uuid4()}"):
         if not your_name or not recipient_name:
             st.error("❌ Please provide at least your name and recipient's name")
         else:
@@ -380,11 +381,11 @@ with tab1:
             )
 
         with col2:
-            if st.button("📋 Copy to Clipboard"):
+            if st.button("📋 Copy to Clipboard", key=f"copy_email_{uuid.uuid4()}"):
                 st.info("✅ Use Ctrl+C to copy the email above")
 
         with col3:
-            if st.button("📧 Open in Email Client"):
+            if st.button("📧 Open in Email Client", key=f"open_email_client_{uuid.uuid4()}"):
                 # Use the recipient email from the input or leave empty
                 email_to = recipient_email if recipient_email else ""
                 subject_encoded = result.get("subject", "").replace(" ", "%20")
@@ -400,7 +401,7 @@ with tab1:
                 )
 
         with col4:
-            if st.button("🔄 Generate Another"):
+            if st.button("🔄 Generate Another", key=f"generate_another_email_{uuid.uuid4()}"):
                 st.session_state.generated_email = None
                 st.rerun()
 

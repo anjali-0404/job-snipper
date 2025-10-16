@@ -5,6 +5,7 @@ Estimate salary based on role, experience, location, and skills.
 
 import streamlit as st
 import sys
+import uuid
 from pathlib import Path
 import plotly.graph_objects as go
 import plotly.express as px
@@ -207,7 +208,7 @@ with tab1:
 
     # Generate Estimate Button
     if st.button(
-        "💰 Calculate Salary Estimate", type="primary", use_container_width=True
+        "💰 Calculate Salary Estimate", type="primary", use_container_width=True, key=f"calculate_salary_{uuid.uuid4()}"
     ):
         if not job_title:
             st.error("❌ Please enter a job title")

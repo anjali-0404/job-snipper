@@ -6,6 +6,7 @@ Tracks user interactions, feature usage, and saves data to Streamlit Cloud
 import streamlit as st
 import json
 import os
+import uuid
 from datetime import datetime
 from typing import Dict, Any, Optional
 import hashlib
@@ -314,7 +315,7 @@ class UserDataCollectionUI:
                 st.write(f"• {page}: {count} views")
         
         # Export option
-        if st.button("📥 Download My Data"):
+        if st.button("📥 Download My Data", key=f"download_my_data_{uuid.uuid4()}"):
             data = analytics.export_analytics_data()
             st.download_button(
                 label="💾 Download JSON",
@@ -384,13 +385,28 @@ class StreamlitCloudDataManager:
         st.sidebar.caption(f"⏱️ Session: {summary['session_duration']} min")
         st.sidebar.caption(f"📄 Actions: {summary['total_interactions']}")
         
-        # Auto-save button
-        if st.sidebar.button("💾 Save Session Data", help="Save your session data to cloud", key="save_session_data_btn"):
-            result = StreamlitCloudDataManager.save_user_data()
-            if result['status'] == 'success':
-                st.sidebar.success("✅ Data saved!")
-            else:
-                st.sidebar.error("❌ Save failed")
+    # Auto-save button moved to module-level to avoid NameError during class definition
+    # This was previously executed inside the class body which caused StreamlitCloudDataManager
+    # to be undefined at runtime; see `render_save_session_button` below.
+
+
+# Convenience functions for easy integration
+def init_analytics():
+    """Initialize analytics for the current page."""
+    return UserAnalytics()
+
+def render_save_session_button():
+    """Render the Save Session Data button in the sidebar (module-level)."""
+    if st.sidebar.button("💾 Save Session Data", help="Save your session data to cloud", key=f"save_session_data_btn_{uuid.uuid4()}"):
+        result = StreamlitCloudDataManager.save_user_data()
+        if result.get('status') == 'success':
+            st.sidebar.success("✅ Data saved!")
+        else:
+            st.sidebar.error("❌ Save failed")
+
+
+# Render the button once the class is defined
+render_save_session_button()
 
 
 # Convenience functions for easy integration

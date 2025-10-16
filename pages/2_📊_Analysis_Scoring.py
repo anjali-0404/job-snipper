@@ -6,6 +6,7 @@ Comprehensive scoring and analysis with professional visualizations.
 import streamlit as st
 import os
 import sys
+import uuid
 
 # Add parent directory to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -56,7 +57,7 @@ st.markdown("# 📊 Resume Analysis & Scoring")
 # Check if resume is parsed
 if not st.session_state.parsed:
     st.warning("⚠️ Please upload and parse a resume first!")
-    if st.button("📄 Go to Upload Page"):
+    if st.button("📄 Go to Upload Page", key=f"go_to_upload_analysis_{uuid.uuid4()}"):
         st.switch_page("pages/1_📄_Upload_Resume.py")
     st.stop()
 
@@ -75,7 +76,7 @@ st.markdown(
 # Analyze button
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
-    if st.button("🔍 Analyze Resume", use_container_width=True, type="primary"):
+    if st.button("🔍 Analyze Resume", use_container_width=True, type="primary", key=f"analyze_resume_{uuid.uuid4()}"):
         with st.spinner("🤖 AI is analyzing your resume..."):
             try:
                 # Basic scoring
@@ -288,11 +289,11 @@ if st.session_state.score is not None:
     col1, col2 = st.columns(2)
     with col1:
         if st.button(
-            "🎯 Match with Job Description", use_container_width=True, type="primary"
+            "🎯 Match with Job Description", use_container_width=True, type="primary", key=f"match_job_description_{uuid.uuid4()}"
         ):
             st.switch_page("pages/3_🎯_Job_Matching.py")
     with col2:
-        if st.button("✍️ Rewrite Resume", use_container_width=True):
+        if st.button("✍️ Rewrite Resume", use_container_width=True, key=f"rewrite_resume_analysis_{uuid.uuid4()}"):
             st.switch_page("pages/4_✍️_Resume_Rewrite.py")
 
 else:

@@ -6,6 +6,7 @@ Match your resume with job descriptions and identify skill gaps.
 import streamlit as st
 import os
 import sys
+import uuid
 
 # Add parent directory to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -53,7 +54,7 @@ st.markdown("# 🎯 Job Matching & Skill Gap Analysis")
 # Check if resume is parsed
 if not st.session_state.parsed:
     st.warning("⚠️ Please upload and parse a resume first!")
-    if st.button("📄 Go to Upload Page"):
+    if st.button("📄 Go to Upload Page", key=f"go_to_upload_matching_{uuid.uuid4()}"):
         st.switch_page("pages/1_📄_Upload_Resume.py")
     st.stop()
 
@@ -98,6 +99,7 @@ with col2:
         use_container_width=True,
         type="primary",
         disabled=not jd_text.strip(),
+        key=f"analyze_job_match_{uuid.uuid4()}",
     )
 
 if match_button and jd_text.strip():
@@ -283,11 +285,11 @@ if st.session_state.match_info and jd_text.strip():
         col1, col2 = st.columns(2)
         with col1:
             if st.button(
-                "📚 Get Project Suggestions", use_container_width=True, type="primary"
+                "📚 Get Project Suggestions", use_container_width=True, type="primary", key=f"get_project_suggestions_{uuid.uuid4()}"
             ):
                 st.switch_page("pages/5_💼_Cover_Letter_Projects.py")
         with col2:
-            if st.button("✍️ Optimize Resume", use_container_width=True):
+            if st.button("✍️ Optimize Resume", use_container_width=True, key=f"optimize_resume_matching_{uuid.uuid4()}"):
                 st.switch_page("pages/4_✍️_Resume_Rewrite.py")
 
     # Statistics

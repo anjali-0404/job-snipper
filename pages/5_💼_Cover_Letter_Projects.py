@@ -6,6 +6,7 @@ Generate tailored cover letters and get project recommendations.
 import streamlit as st
 import os
 import sys
+import uuid
 import json
 from datetime import datetime
 
@@ -42,7 +43,7 @@ st.markdown("# 💼 Cover Letter Generator")
 # Check if resume is parsed
 if not st.session_state.parsed:
     st.warning("⚠️ Please upload and parse a resume first!")
-    if st.button("📄 Go to Upload Page"):
+    if st.button("📄 Go to Upload Page", key=f"go_to_upload_cover_{uuid.uuid4()}"):
         st.switch_page("pages/1_📄_Upload_Resume.py")
     st.stop()
 
@@ -126,6 +127,7 @@ with st.container():
             use_container_width=True,
             type="primary",
             disabled=not can_generate,
+            key=f"generate_cover_letter_{uuid.uuid4()}",
         ):
             with st.spinner("🤖 AI is crafting your cover letter..."):
                 try:
@@ -195,12 +197,12 @@ with st.container():
             )
 
         with col3:
-            if st.button("📋 Copy Text", use_container_width=True):
+            if st.button("📋 Copy Text", use_container_width=True, key=f"copy_text_{uuid.uuid4()}"):
                 st.code(edited_cl, language=None)
                 st.info("👆 Select and copy the text above")
 
         with col4:
-            if st.button("🔄 Regenerate", use_container_width=True):
+            if st.button("🔄 Regenerate", use_container_width=True, key=f"regenerate_cover_{uuid.uuid4()}"):
                 st.session_state.cover_letter = None
                 st.rerun()
 

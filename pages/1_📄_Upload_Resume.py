@@ -5,6 +5,7 @@ Upload your resume and parse it into structured data.
 
 import streamlit as st
 import json
+import uuid
 from utils.file_utils import save_uploaded_file, detect_file_type
 from agents.parser_agent import parse_resume
 from agents.project_agent import suggest_projects
@@ -56,7 +57,7 @@ with col1:
         st.info(f"📋 File type detected: **{simple_type.upper()}**")
 
         # Parse button
-        if st.button("🔍 Parse Resume", use_container_width=True, type="primary"):
+        if st.button("🔍 Parse Resume", use_container_width=True, type="primary", key=f"parse_resume_{uuid.uuid4()}"):
             with st.spinner("🤖 AI is parsing your resume... This may take a moment."):
                 try:
                     parsed = parse_resume(st.session_state.file_path, st.session_state.file_type)
@@ -106,7 +107,7 @@ if st.session_state.parsed:
 
     # Quick link to Project Suggestions
     st.markdown("---")
-    if st.button("🚀 Suggest Projects", use_container_width=True, type="primary"):
+    if st.button("🚀 Suggest Projects", use_container_width=True, type="primary", key=f"suggest_projects_{uuid.uuid4()}"):
         # Save session data before navigation
         auto_save_session()
         st.query_params["page"] = "5b_🚀_Project_Suggestions"# Feedback and autosave
