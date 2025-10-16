@@ -1,0 +1,4 @@
+# System packages needed for deployment
+# Uncomment if using OCR features
+# tesseract-ocr
+# tesseract-ocr-eng

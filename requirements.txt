@@ -1,38 +1,50 @@
-streamlit
-gradio>=4.0.0
-# Pin core LLM and SDK versions to resolve dependency conflicts reported during install
+# Core Streamlit
+streamlit>=1.48.0
+
+# LLM APIs (Multi-model support)
+groq>=0.31.0
+google-generativeai>=0.8.0
+openai>=1.0.0
+anthropic>=0.18.0
+
+# LangChain ecosystem
 langchain>=0.3.27
-google-ai-generativelanguage>=0.7,<1
-google-generativeai>=0.8.0  # Google Gemini SDK
-requests
+langchain-exa
+
+# Document processing
 pdfplumber
 python-docx
 docx2txt
-groq>=0.31.0        # Groq API client wrapper (primary)
-openai>=1.0.0       # OpenAI API client (optional)
-anthropic>=0.18.0   # Anthropic Claude API client (optional)
-langchain-exa
-# vector DB client, e.g. chromadb, pinecone, etc.
-chromadb
-# for diff / UI charts and visualizations
-plotly
-deepdiff
+requests
+
+# Data science and visualization
+pandas>=2.0.0
+numpy
 matplotlib>=3.7.0
 seaborn>=0.12.0
-pandas>=2.0.0
+plotly
+
+# PDF generation
 reportlab>=3.6.0
 
-# Ensure dotenv version meets other packages' minimum
+# Utilities
 python-dotenv>=1.1.1
+deepdiff
 
-# Optional OCR backends
-pillow
-pytesseract
-google-cloud-vision
+# Optional: OCR (may cause deployment issues if Tesseract not available)
+# pillow
+# pytesseract
+# google-cloud-vision
 
-# Match opentelemetry requirements (picked to satisfy OTLP exporter)
-opentelemetry-api==1.37.0
-opentelemetry-exporter-otlp-proto-common==1.37.0
-opentelemetry-proto==1.37.0
-opentelemetry-sdk==1.37.0
-opentelemetry-semantic-conventions==0.58b0
+# Optional: Vector DB (heavy package, comment out if not used)
+# chromadb
+
+# Optional: Gradio (heavy package, comment out if not used)
+# gradio>=4.0.0
+
+# Optional: OpenTelemetry (comment out if not used)
+# opentelemetry-api==1.37.0
+# opentelemetry-exporter-otlp-proto-common==1.37.0
+# opentelemetry-proto==1.37.0
+# opentelemetry-sdk==1.37.0
+# opentelemetry-semantic-conventions==0.58b0
