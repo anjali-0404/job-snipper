@@ -3,6 +3,8 @@ Unified Color Scheme Configuration for ResumeMasterAI
 All pages should use these consistent colors for a professional look
 """
 
+import os
+
 # Primary Brand Colors
 PRIMARY_GRADIENT_START = "#667eea"
 PRIMARY_GRADIENT_END = "#764ba2"
@@ -65,11 +67,8 @@ def get_unified_css():
         box-sizing: border-box;
     }}
     
-    /* Hide Streamlit Branding */
-    #MainMenu {{visibility: hidden;}}
-    footer {{visibility: hidden;}}
-    header {{visibility: hidden;}}
-    .stDeployButton {{display: none;}}
+    /* Streamlit Branding visibility (toggle with env HIDE_STREAMLIT_BRANDING=1) */
+    {"/* Hidden by environment setting */\n    #MainMenu {visibility: hidden;}\n    footer {visibility: hidden;}\n    header {visibility: hidden;}\n    .stDeployButton {display: none;}" if os.getenv('HIDE_STREAMLIT_BRANDING','0') in ('1','true','True','yes') else ""}
     
     /* Main App Background */
     .stApp {{
@@ -822,4 +821,20 @@ def get_unified_css():
         }}
     }}
     </style>
+    """
+
+
+def get_gradio_css():
+    """
+    Return a compact CSS string intended for Gradio apps.
+    Keep it minimal to avoid interfering with Streamlit styles.
+    """
+    return """
+    /* Gradio specific minimal styling */
+    body { background: #0f1724; font-family: Inter, system-ui, sans-serif; }
+    .gradio-container { max-width: 1200px; margin: 20px auto; }
+    .gradio-container .header { background: linear-gradient(90deg, #2b6cb0 0%, #805ad5 100%); color: white; padding: 18px; border-radius: 8px; }
+    .gr-button { border-radius: 8px; padding: 10px 16px; }
+    .gr-button-primary { background: linear-gradient(90deg,#2b6cb0,#805ad5); color: white; }
+    .gradio-container .footer { color: #e6eef8; margin-top: 18px; }
     """

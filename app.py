@@ -12,6 +12,7 @@ import json
 from typing import Optional, Tuple
 
 import gradio as gr
+from utils.color_scheme import get_gradio_css
 
 # Attempt to import real services; if not available, provide safe fallbacks
 try:
@@ -138,40 +139,7 @@ except Exception:
             return "Dear Recruiter,\n\nThis is a fallback email.\n"
 
 # CSS — high contrast, readable, compact but modern
-custom_css = """
-/* Container */
-body { background: #0f1724; }
-.gradio-container { max-width: 1200px; margin: 20px auto; font-family: Inter, system-ui, sans-serif; }
-
-/* Header */
-.header {
-  background: linear-gradient(90deg, #2b6cb0 0%, #805ad5 100%);
-  color: white;
-  padding: 28px;
-  border-radius: 12px;
-  box-shadow: 0 8px 30px rgba(2,6,23,0.6);
-}
-.header h1 { margin: 0; font-size: 28px; }
-.header p { margin: 6px 0 0 0; color: rgba(255,255,255,0.92); }
-
-/* Tabs */
-.gradio-tabs { margin-top: 18px; }
-.tabtitle { color: #0f1724 !important; font-weight: 700 !important; }
-
-/* Card */
-.card { background: #ffffff; color: #0f1724; padding: 18px; border-radius: 10px; box-shadow: 0 8px 20px rgba(2,6,23,0.2); }
-
-/* Buttons */
-.gr-button { border-radius: 8px; padding: 12px 18px; }
-.gr-button-primary { background: linear-gradient(90deg,#2b6cb0,#805ad5); color: white; }
-
-/* Footer */
-.footer { margin-top: 18px; text-align: center; color: #e6eef8; }
-.footer .muted { color: rgba(230,238,248,0.8); }
-
-/* Ensure markdown is readable */
-.markdown-text { color: #0f1724 !important; }
-"""
+custom_css = get_gradio_css()
 
 # Helper: parse uploaded resume
 
