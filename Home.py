@@ -463,6 +463,11 @@ with st.sidebar:
     st.page_link(
         "pages/4_✍️_Resume_Rewrite.py", label="✍️ Resume Rewrite", icon="✍️"
     )
+    st.page_link(
+        "pages/5b_🚀_Project_Suggestions.py",
+        label="🚀 Project Suggestions",
+        icon="🚀",
+    )
 
     st.markdown("---")
 

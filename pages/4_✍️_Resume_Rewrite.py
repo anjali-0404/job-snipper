@@ -630,13 +630,27 @@ else:
                     )
 
                     for category, data in gaps.items():
-                        match_pct = data["match_percentage"]
+                        # data may be a dict with keys or a numeric match percentage
+                        if isinstance(data, dict):
+                            match_pct = data.get("match_percentage", 0.0)
+                            gaps_list = data.get("gaps", [])
+                        else:
+                            # If upstream returned a numeric value, treat it as match percentage
+                            try:
+                                match_pct = float(data)
+                            except Exception:
+                                match_pct = 0.0
+                            gaps_list = []
 
                         st.markdown(f"**{category}:** {match_pct}% match")
-                        st.progress(match_pct / 100)
+                        # guard against division by zero or invalid values
+                        try:
+                            st.progress(max(0.0, min(1.0, float(match_pct) / 100.0)))
+                        except Exception:
+                            pass
 
-                        if data["gaps"]:
-                            st.markdown(f"_Missing:_ {', '.join(data['gaps'][:5])}")
+                        if gaps_list:
+                            st.markdown(f"_Missing:_ {', '.join(gaps_list[:5])}")
 
                 # Learning paths
                 st.markdown("---")

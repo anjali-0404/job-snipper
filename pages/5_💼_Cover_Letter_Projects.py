@@ -14,14 +14,13 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from utils.color_scheme import get_unified_css
 from agents.coverletter_agent import generate_cover_letter
-from agents.project_agent import suggest_projects
 from dotenv import load_dotenv
 
 load_dotenv()
 
 # Page configuration
 st.set_page_config(
-    page_title="Cover Letter & Projects - ResumeMasterAI", page_icon="💼", layout="wide"
+    page_title="Cover Letter - ResumeMasterAI", page_icon="💼", layout="wide"
 )
 
 # Apply unified color scheme
@@ -38,7 +37,7 @@ if "jd_for_cl" not in st.session_state:
     st.session_state.jd_for_cl = ""
 
 # Header
-st.markdown("# 💼 Cover Letter & Project Suggestions")
+st.markdown("# 💼 Cover Letter Generator")
 
 # Check if resume is parsed
 if not st.session_state.parsed:
@@ -47,11 +46,8 @@ if not st.session_state.parsed:
         st.switch_page("pages/1_📄_Upload_Resume.py")
     st.stop()
 
-# Tabs for two features
-tab1, tab2 = st.tabs(["📝 Cover Letter Generator", "🚀 Project Suggestions"])
-
-# TAB 1: Cover Letter Generator
-with tab1:
+# Cover Letter Generator
+with st.container():
     st.markdown(
         """
     <div class="custom-card">
@@ -226,236 +222,22 @@ with tab1:
             unsafe_allow_html=True,
         )
 
-# TAB 2: Project Suggestions
-with tab2:
+    # Link to Project Suggestions page
+    st.markdown("---")
     st.markdown(
         """
     <div class="custom-card">
-        <p style="font-size: 1.1rem; color: #4F5D75;">
-            Get personalized project suggestions to enhance your skills and fill gaps in your resume. 
-            Perfect for building a strong portfolio!
+        <p style="font-size: 1.05rem; color: #4F5D75;">
+            Project suggestions are now available on a separate page to keep features focused.
+            <strong>If you'd like to get project ideas</strong>, visit the Projects page below.
         </p>
+        <div style="text-align:center; margin-top: 1rem;">
+            <a class="button-link" href="/?page=pages/5b_🚀_Project_Suggestions.py">� Go to Project Suggestions</a>
+        </div>
     </div>
     """,
         unsafe_allow_html=True,
     )
-
-    # Get missing skills from matching if available
-    missing_skills = []
-    if st.session_state.get("match_info"):
-        missing_skills = st.session_state.match_info.get("missing_skills", [])
-
-    if missing_skills:
-        st.markdown("## 🎯 Based on Your Skill Gaps")
-        st.markdown(
-            f"""
-        <div class="custom-card" style="background: #E3F2FD;">
-            <p style="color: #4F5D75;">
-                We identified <strong>{len(missing_skills)}</strong> skills you could develop. 
-                Click below to get project recommendations that will help you learn these skills.
-            </p>
-        </div>
-        """,
-            unsafe_allow_html=True,
-        )
-
-    # Custom skill input
-    st.markdown("## 🛠️ Skills to Develop")
-
-    col1, col2 = st.columns([3, 1])
-
-    with col1:
-        custom_skills = st.text_input(
-            "Skills you want to develop (comma-separated)",
-            value=", ".join(missing_skills[:5]) if missing_skills else "",
-            placeholder="e.g., React, Docker, Machine Learning, AWS",
-            help="Enter skills you want to learn through projects",
-        )
-
-    with col2:
-        num_projects = st.selectbox(
-            "Number of Projects",
-            [3, 5, 7, 10],
-            index=1,
-            help="How many project suggestions do you want?",
-        )
-
-    # Generate button
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        if st.button(
-            "🚀 Get Project Suggestions",
-            use_container_width=True,
-            type="primary",
-            disabled=not custom_skills.strip(),
-        ):
-            with st.spinner("🤖 AI is generating project ideas..."):
-                try:
-                    skills_list = [
-                        s.strip() for s in custom_skills.split(",") if s.strip()
-                    ]
-                    projects = suggest_projects(skills_list, num_projects)
-                    st.session_state.projects = projects
-                    st.success("✅ Projects generated!")
-                    st.rerun()
-                except Exception as e:
-                    st.error(f"❌ Error generating projects: {e}")
-
-    if not custom_skills.strip():
-        st.info("👆 Enter skills you want to develop to get project suggestions")
-
-    # Display projects if generated
-    if st.session_state.projects:
-        st.markdown("<br>", unsafe_allow_html=True)
-        st.markdown("## 🎨 Recommended Projects")
-
-        projects = (
-            st.session_state.projects
-            if isinstance(st.session_state.projects, list)
-            else []
-        )
-
-        if not projects:
-            st.warning("No projects generated. Try again with different skills.")
-        else:
-            for idx, project in enumerate(projects, 1):
-                # Handle both dict and string formats
-                if isinstance(project, dict):
-                    title = project.get("title", f"Project {idx}")
-                    description = project.get("description", "")
-                    skills = project.get("skills", [])
-                    difficulty = project.get("difficulty", "Intermediate")
-                    duration = project.get("duration", "2-4 weeks")
-                else:
-                    # Fallback for string format
-                    title = f"Project {idx}"
-                    description = str(project)
-                    skills = []
-                    difficulty = "Intermediate"
-                    duration = "2-4 weeks"
-
-                # Difficulty badge color
-                if difficulty.lower() == "beginner":
-                    diff_color = "#06A77D"
-                elif difficulty.lower() == "advanced":
-                    diff_color = "#C73E1D"
-                else:
-                    diff_color = "#F18F01"
-
-                st.markdown(
-                    f"""
-                <div class="custom-card" style="background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-left: 4px solid #2E86AB;">
-                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
-                        <h3 style="color: #2D3142; margin: 0;">{idx}. {title}</h3>
-                        <div style="display: flex; gap: 0.5rem;">
-                            <span style="background: {diff_color}; color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.85rem; font-weight: 600;">
-                                {difficulty}
-                            </span>
-                            <span style="background: #E5E5E5; color: #4F5D75; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.85rem; font-weight: 600;">
-                                ⏱️ {duration}
-                            </span>
-                        </div>
-                    </div>
-                    <p style="color: #4F5D75; line-height: 1.8; margin-bottom: 1rem;">
-                        {description}
-                    </p>
-                    <div style="margin-top: 1rem;">
-                        <strong style="color: #2E86AB;">Skills You'll Learn:</strong><br>
-                        <div style="margin-top: 0.5rem;">
-                            {"".join([f'<span style="display: inline-block; background: linear-gradient(135deg, #2E86AB 0%, #06A77D 100%); color: white; padding: 0.3rem 0.7rem; margin: 0.25rem; border-radius: 12px; font-size: 0.85rem;">{skill}</span>' for skill in skills]) if skills else '<span style="color: #999;">Skills not specified</span>'}
-                        </div>
-                    </div>
-                </div>
-                <br>
-                """,
-                    unsafe_allow_html=True,
-                )
-
-            # Download projects as JSON
-            st.markdown("<br>", unsafe_allow_html=True)
-
-            col1, col2, col3 = st.columns([1, 1, 1])
-
-            with col1:
-                projects_json = json.dumps(projects, indent=2)
-                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                st.download_button(
-                    label="📥 Download Projects (JSON)",
-                    data=projects_json,
-                    file_name=f"project_suggestions_{timestamp}.json",
-                    mime="application/json",
-                    use_container_width=True,
-                )
-
-            with col2:
-                if st.button("🔄 Generate New Projects", use_container_width=True):
-                    st.session_state.projects = None
-                    st.rerun()
-
-            with col3:
-                if st.button(
-                    "Next: Job Search →", use_container_width=True, type="primary"
-                ):
-                    st.switch_page("pages/6_🔍_Job_Search.py")
-
-            # Implementation tips
-            st.markdown("<br>", unsafe_allow_html=True)
-            st.markdown(
-                """
-            <div class="custom-card" style="background: #FFF3E0; border-left-color: #F18F01;">
-                <h4>📌 Project Implementation Tips</h4>
-                <ul style="line-height: 2; color: #4F5D75;">
-                    <li><strong>Start small:</strong> Begin with the beginner projects to build confidence</li>
-                    <li><strong>Document well:</strong> Create a detailed README.md for each project</li>
-                    <li><strong>Use version control:</strong> Push your code to GitHub with meaningful commits</li>
-                    <li><strong>Deploy it:</strong> Host your projects online (Heroku, Netlify, Vercel, etc.)</li>
-                    <li><strong>Write about it:</strong> Create a blog post explaining your implementation</li>
-                    <li><strong>Add to resume:</strong> Include completed projects in your resume and portfolio</li>
-                </ul>
-            </div>
-            """,
-                unsafe_allow_html=True,
-            )
-    else:
-        # Project ideas inspiration
-        st.markdown("### 💡 Why Work on Projects?")
-
-        col1, col2 = st.columns(2)
-
-        with col1:
-            st.markdown(
-                """
-            <div class="custom-card">
-                <h4>🎯 Benefits</h4>
-                <ul style="line-height: 2;">
-                    <li>Demonstrate practical skills to employers</li>
-                    <li>Fill skill gaps identified in job matching</li>
-                    <li>Build a strong portfolio</li>
-                    <li>Gain hands-on experience</li>
-                    <li>Stand out from other candidates</li>
-                </ul>
-            </div>
-            """,
-                unsafe_allow_html=True,
-            )
-
-        with col2:
-            st.markdown(
-                """
-            <div class="custom-card">
-                <h4>🚀 Project Types We Suggest</h4>
-                <ul style="line-height: 2;">
-                    <li>Web applications and APIs</li>
-                    <li>Data analysis and visualization</li>
-                    <li>Machine learning models</li>
-                    <li>Mobile apps</li>
-                    <li>DevOps and infrastructure</li>
-                    <li>Open source contributions</li>
-                </ul>
-            </div>
-            """,
-                unsafe_allow_html=True,
-            )
 
 # Progress indicator
 st.markdown("---")

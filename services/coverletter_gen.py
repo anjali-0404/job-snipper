@@ -9,19 +9,51 @@ GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
 MODEL = os.getenv("GENAI_MODEL", "models/gemini-2.5-flash")
 
 try:
-    from google.ai import generativelanguage as genai
-    from google.ai.generativelanguage import types as gl_types
-    from google.ai.generativelanguage.services import text_service
-    from google.api_core.client_options import ClientOptions
+    # Use importlib to import the generative language SDK modules dynamically. This avoids
+    # static import paths that some linters or editors may not be able to resolve while
+    # preserving runtime imports when the package is installed in the active environment.
+    import importlib
+
+    genai = importlib.import_module("google.ai.generativelanguage")
+    gl_types = importlib.import_module("google.ai.generativelanguage.types")
+
+    # Try to load the concrete TextServiceClient class from the SDK. Some SDK versions
+    # expose this under services.text_service, so we attempt that first and fall back to
+    # a module-level lookup if needed.
+    TextServiceClient = None
+    try:
+        _text_svc_mod = importlib.import_module(
+            "google.ai.generativelanguage.services.text_service"
+        )
+        TextServiceClient = getattr(_text_svc_mod, "TextServiceClient", None)
+    except Exception:
+        try:
+            _svc_mod = importlib.import_module("google.ai.generativelanguage.services")
+            TextServiceClient = getattr(_svc_mod, "TextServiceClient", None)
+        except Exception:
+            TextServiceClient = None
+
+    # Import ClientOptions dynamically as well
+    try:
+        api_core_mod = importlib.import_module("google.api_core.client_options")
+        ClientOptions = getattr(api_core_mod, "ClientOptions", None)
+    except Exception:
+        ClientOptions = None
 
     client_opts = None
-    if GOOGLE_API_KEY:
+    if GOOGLE_API_KEY and ClientOptions is not None:
         client_opts = ClientOptions(api_key=GOOGLE_API_KEY)
 
-    _GENAI_CLIENT = text_service.TextServiceClient(client_options=client_opts)
-    _HAS_GEMINI = True
+    # Create client if the class is available
+    if TextServiceClient is not None:
+        _GENAI_CLIENT = TextServiceClient(client_options=client_opts)
+        _HAS_GEMINI = True
+    else:
+        _GENAI_CLIENT = None
+        _HAS_GEMINI = False
 except Exception:
     genai = None
+    gl_types = None
     _GENAI_CLIENT = None
     _HAS_GEMINI = False
 

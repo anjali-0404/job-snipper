@@ -399,6 +399,18 @@ def init_analytics():
     return UserAnalytics()
 
 
+# Convenience wrappers for backwards compatibility with pages that import
+# these helpers directly from utils.user_analytics
+def show_feedback_widget(page_name: str):
+    """Display the feedback widget for the given page name."""
+    UserDataCollectionUI.show_feedback_widget(page_name)
+
+
+def auto_save_session():
+    """Trigger the StreamlitCloudDataManager auto-save UI."""
+    StreamlitCloudDataManager.auto_save_on_exit()
+
+
 def track_page(page_name: str):
     """Quick function to track page view."""
     analytics = UserAnalytics()
