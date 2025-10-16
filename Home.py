@@ -20,7 +20,7 @@ load_dotenv()
 # Page configuration
 st.set_page_config(
     page_title="ResumeMasterAI - AI-Powered Career Excellence",
-    page_icon="🚀",
+    page_icon="",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -49,7 +49,7 @@ st.markdown(
             Transform Your Career with <span class="gradient-text">AI-Powered</span> Resume Magic
         </h1>
         <p class="hero-subtitle">
-            🚀 The Ultimate Resume Optimization Platform
+             The Ultimate Resume Optimization Platform
         </p>
         <p class="hero-tagline">
             Leverage cutting-edge AI to create, optimize, and manage your professional documents with unprecedented precision
@@ -58,12 +58,12 @@ st.markdown(
             <!-- Use JS navigation to ensure Streamlit picks up the query param change -->
             <a href="#" onclick="window.location.href='{start_page}'; return false;" style="text-decoration: none;">
                 <button style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; padding: 1rem 3rem; font-size: 1.2rem; font-weight: 700; border-radius: 50px; cursor: pointer; box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4); transition: all 0.3s ease; margin-right: 1rem;">
-                    🚀 Get Started Free
+                     Get Started Free
                 </button>
             </a>
             <a href="#features" style="text-decoration: none;">
                 <button style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); color: white; border: 2px solid rgba(255, 255, 255, 0.3); padding: 1rem 3rem; font-size: 1.2rem; font-weight: 700; border-radius: 50px; cursor: pointer; transition: all 0.3s ease;">
-                    📖 Learn More
+                     Learn More
                 </button>
             </a>
         </div>
