@@ -95,7 +95,7 @@ job-snipper/
 ├── scripts/                 # Utility scripts
 │   ├── test_integration.py # Integration tests
 │   ├── test_ocr.py         # OCR testing
-│   └── test_workflow_viz.py# Workflow visualization tests
+│   └── test_workflow_viz.py # Workflow visualization tests
 ├── services/                # Core business logic
 │   ├── coverletter_gen.py  # Cover letter generation
 │   ├── docx_parser.py      # DOCX file parsing
@@ -129,9 +129,7 @@ job-snipper/
 ├── README.md                # This file
 ├── requirements.txt         # Python dependencies
 ├── SECURITY.md              # Security policy
-├── app.py                   # Alternative app entry point
-├── run_gradio.py           # Gradio interface (alternative UI)
-├── run_streamlit.py        # Streamlit runner script
+├── app.py                   # Gradio interface (alternative UI)
 └── test_multimodel.py      # Multi-model testing
 ```
 
