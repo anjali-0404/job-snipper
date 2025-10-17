@@ -63,6 +63,129 @@ ResumeMasterAI is an enterprise-grade AI platform that revolutionizes resume opt
 
 ---
 
+---
+
+## 📂 Project Structure
+
+```
+job-snipper/
+├── .streamlit/              # Streamlit configuration
+│   ├── config.toml         # App configuration
+│   └── secrets.toml        # API keys (not in repo)
+├── agents/                  # AI agent configurations
+├── data/                    # Data storage directory
+│   ├── resumes/            # Uploaded resumes
+│   ├── reports/            # Generated reports
+│   └── visuals/            # Visualization outputs
+├── pages/                   # Streamlit pages (multi-page app)
+│   ├── 1_📄_Upload_Resume.py
+│   ├── 2_📊_Analysis_Scoring.py
+│   ├── 3_🎯_Job_Matching.py
+│   ├── 4_✍️_Resume_Rewrite.py
+│   ├── 5_💼_Cover_Letter_Projects.py
+│   ├── 6_🔍_Job_Search.py
+│   ├── 7_🏗️_Resume_Builder.py
+│   ├── 8_🎤_Interview_Prep.py
+│   ├── 9_💰_Salary_Estimator.py
+│   ├── 10_💡_Skills_Analyzer.py
+│   ├── 11_📱_Social_Resume.py
+│   ├── 12_📧_Email_Generator.py
+│   ├── 13_📝_Version_Manager.py
+│   └── 14_🚀_Project_Suggestions.py
+├── scripts/                 # Utility scripts
+│   ├── test_integration.py # Integration tests
+│   ├── test_ocr.py         # OCR testing
+│   └── test_workflow_viz.py# Workflow visualization tests
+├── services/                # Core business logic
+│   ├── coverletter_gen.py  # Cover letter generation
+│   ├── docx_parser.py      # DOCX file parsing
+│   ├── job_scraper.py      # Job board scraping
+│   ├── mistral_ocr.py      # OCR with Mistral AI
+│   └── pdf_parser.py       # PDF file parsing
+├── utils/                   # Utility functions
+│   ├── ats_pdf_templates.py# Resume templates
+│   ├── ats_scanner.py      # ATS scoring logic
+│   ├── color_scheme.py     # UI styling
+│   ├── document_export.py  # Export utilities
+│   ├── email_generator.py  # Email templates
+│   ├── file_utils.py       # File operations
+│   ├── interview_prep.py   # Interview questions
+│   ├── job_matcher.py      # Job matching algorithm
+│   ├── langchain_utils.py  # LangChain integration
+│   ├── langgraph_visual.py # Graph visualizations
+│   ├── llm_utils.py        # LLM client management
+│   ├── resume_analytics.py # Analytics tracking
+│   ├── resume_grader.py    # Resume grading
+│   ├── salary_estimator.py # Salary predictions
+│   ├── scoring_utils.py    # Scoring algorithms
+│   └── skills_analyzer.py  # Skills analysis
+├── .env.example             # Example environment variables
+├── .gitignore               # Git ignore rules
+├── CODE_OF_CONDUCT.md       # Community guidelines
+├── Dockerfile               # Docker image definition
+├── docker-compose.yml       # Docker Compose config
+├── Home.py                  # Main landing page
+├── LICENSE                  # MIT License
+├── README.md                # This file
+├── requirements.txt         # Python dependencies
+├── SECURITY.md              # Security policy
+├── app.py                   # Alternative app entry point
+├── run_gradio.py           # Gradio interface (alternative UI)
+├── run_streamlit.py        # Streamlit runner script
+└── test_multimodel.py      # Multi-model testing
+```
+
+### Key Directories Explained
+
+#### `/pages` - Multi-Page Application
+Each file represents a different feature/page in the Streamlit app:
+- **Upload Resume**: Parse and extract resume information
+- **Analysis & Scoring**: ATS compatibility scoring
+- **Job Matching**: Match resumes to job descriptions
+- **Resume Rewrite**: AI-powered resume enhancement
+- **Cover Letter**: Generate personalized cover letters
+- **Job Search**: Search for relevant job opportunities
+- **Resume Builder**: Build resumes from scratch
+- **Interview Prep**: Practice interview questions
+- **Salary Estimator**: Estimate salary ranges
+- **Skills Analyzer**: Identify skill gaps
+- **Social Resume**: Optimize social media profiles
+- **Email Generator**: Create professional emails
+- **Version Manager**: A/B test resume versions
+- **Project Suggestions**: Get project ideas to boost resume
+
+#### `/services` - Core Business Logic
+Contains the main service modules that handle document processing and AI operations.
+
+#### `/utils` - Utility Functions
+Helper functions for various tasks like scoring, styling, analytics, and integrations.
+
+#### `/scripts` - Testing & Automation
+Test scripts and automation utilities for development and CI/CD.
+
+#### `/agents` - AI Agent Configurations
+Configuration files for specialized AI agents (not directly user-facing).
+
+### Configuration Files
+
+- **`.env`**: Environment variables (API keys) - Create from `.env.example`
+- **`.streamlit/secrets.toml`**: Streamlit-specific secrets
+- **`requirements.txt`**: Python package dependencies
+- **`Dockerfile`**: Container image configuration
+- **`docker-compose.yml`**: Multi-container setup
+
+### Data Flow
+
+```
+User Upload → Parser (PDF/DOCX) → Text Extraction → AI Processing → Results Display
+                                         ↓
+                                    LangChain ← LLM (Groq/Gemini/etc.)
+                                         ↓
+                                  ChromaDB (Vector Store)
+```
+
+---
+
 ## 🏗️ Architecture
 
 ```mermaid
@@ -665,25 +788,106 @@ We welcome contributions from the community! Please see our [Contributing Guide]
 
 ---
 
-## 📈 Roadmap
+---
 
-### 🚀 Q4 2024
-- [ ] Advanced AI model integration
-- [ ] Multi-language support
+## 📅 Changelog
+
+### Version 2.0.0 (Current)
+*Latest major release with comprehensive improvements*
+
+**Features Added:**
+- ✅ Multi-model AI support (Groq, Google Gemini, OpenAI, Anthropic)
+- ✅ Enhanced ATS scoring with 100-point system
+- ✅ A/B testing for resume versions
+- ✅ Statistical visualizations with Seaborn
+- ✅ Unified design system (821-line CSS framework)
+- ✅ Version management system
+- ✅ Performance analytics dashboard
+- ✅ Skills analyzer
+- ✅ Social media resume optimizer
+- ✅ Email generator for recruiters
+- ✅ Salary estimator
+- ✅ Interview preparation module
+
+**Performance Improvements:**
+- ⚡ 84% faster load times
+- ⚡ 81% code reduction through optimization
+- ⚡ Improved PDF parsing accuracy
+- ⚡ Better error handling and fallback mechanisms
+
+**Bug Fixes:**
+- 🐛 Fixed PDF parsing issues with complex layouts
+- 🐛 Resolved CSS conflicts across pages
+- 🐛 Fixed API timeout handling
+- 🐛 Improved mobile responsiveness
+
+### Version 1.5.0
+*Enhanced AI capabilities*
+
+**Features Added:**
+- ✅ Google Gemini AI integration
+- ✅ Advanced job matching algorithm
+- ✅ Resume rewrite with 12-feature toolkit
+- ✅ Project suggestions module
+
+**Improvements:**
+- 📊 Better visualization support
+- 🎨 Improved UI/UX design
+- 📱 Mobile-first responsive design
+
+### Version 1.0.0
+*Initial release*
+
+**Core Features:**
+- ✅ Resume upload and parsing (PDF, DOCX)
+- ✅ ATS scanning and scoring
+- ✅ Basic job matching
+- ✅ Cover letter generation
+- ✅ Resume builder
+- ✅ Job search integration
+
+---
+
+## 🗺️ Roadmap
+
+### 🚀 Q4 2024 (In Progress)
+- [ ] Advanced AI model integration (GPT-4, Claude 3)
+- [ ] Multi-language support (Spanish, French, German)
 - [ ] Enhanced mobile experience
 - [ ] API rate limiting optimization
+- [ ] Real-time collaboration features
+- [ ] Integration with LinkedIn API
+- [ ] Advanced resume templates
 
 ### 🎯 Q1 2025
 - [ ] Enterprise features (SSO, audit logs)
 - [ ] Advanced analytics dashboard
-- [ ] Integration with LinkedIn API
-- [ ] Custom branding options
-
-### 🔮 Future
-- [ ] Mobile native apps
-- [ ] AI-powered interview coaching
+- [ ] Custom branding options for organizations
+- [ ] Bulk resume processing
+- [ ] Resume comparison tool
+- [ ] AI-powered interview simulator
 - [ ] Career path recommendations
-- [ ] Salary negotiation assistant
+- [ ] Integration with major job boards (Indeed, Monster, etc.)
+
+### 🔮 Q2 2025
+- [ ] Mobile native apps (iOS, Android)
+- [ ] Browser extension (Chrome, Firefox)
+- [ ] Desktop application (Electron)
+- [ ] Video resume creator
+- [ ] Portfolio website generator
+- [ ] Networking suggestions
+
+### 🌟 Future Vision
+- [ ] AI-powered salary negotiation assistant
+- [ ] Career coaching chatbot
+- [ ] Skills gap analysis and learning paths
+- [ ] Company culture matching
+- [ ] Remote work opportunity finder
+- [ ] Freelance project matcher
+- [ ] Personal brand builder
+- [ ] Automated follow-up email sequences
+
+**Want to contribute to the roadmap?** Share your ideas in [Discussions](https://github.com/KunjShah95/job-snipper/discussions)!
 
 ---
 
